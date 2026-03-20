@@ -308,8 +308,8 @@ function Editor({project,onBack,st}){
   const pTabs=[{k:"props",l:(sRoom||sEl)?"Edit":"Properties"},{k:"rooms",l:"Rooms ("+rms.length+")"},{k:"summary",l:"Summary"},{k:"settings",l:"Settings"}];
   const tools=[{k:"select",l:"Select"},{k:"door",l:"Door"},{k:"window",l:"Window"},{k:"column",l:"Column"}];
 
-  const PanelContent=()=>(<div>{pan==="props"&&rProps()}{pan==="rooms"&&rList()}{pan==="summary"&&rSummary()}{pan==="settings"&&rSet()}</div>);
-  const TabBar=({s})=>(<div style={{display:"flex",gap:5,...s}}>{pTabs.map(t=><button key={t.k} className="fps-tab fps-btn" onClick={()=>{setPan(t.k);if(mob)setPanO(true)}} style={{...tS,flex:1,padding:mob?"8px 6px":"9px 8px",fontSize:mob?10:11,...(pan===t.k?tA2:{})}}>{t.l}</button>)}</div>);
+  const PanelContent=()=>(<div style={{padding:"0 2px",overflow:"hidden"}}>{pan==="props"&&rProps()}{pan==="rooms"&&rList()}{pan==="summary"&&rSummary()}{pan==="settings"&&rSet()}</div>);
+  const TabBar=({s})=>(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,...s}}>{pTabs.map(t=><button key={t.k} className="fps-tab fps-btn" onClick={()=>{setPan(t.k);if(mob)setPanO(true)}} style={{...tS,padding:"9px 8px",fontSize:11,textAlign:"center",...(pan===t.k?tA2:{})}}>{t.l}</button>)}</div>);
 
   return(
     <div style={{display:"flex",flexDirection:"column",height:"100vh",background:"#17141E",color:"#FFFFFF",fontFamily:"'Outfit', sans-serif",overflow:"hidden"}}>
@@ -363,7 +363,7 @@ function Editor({project,onBack,st}){
             <text className="print-only" x={PAD} y={PAD-8} fontFamily="Outfit" fontSize={10} fill="#3A3548" style={{display:"none"}}>{proj.name} - {fl.name} - {pw}x{ph}m - Scale 1:{Math.round(1/(sc/100*100))}</text>
           </svg></div>
         {/* Desktop panel */}
-        {!mob&&<div className="no-print" style={{width:320,minWidth:320,background:"#1E1A28",borderLeft:"1px solid #2A2538",overflowY:"auto",padding:16,display:"flex",flexDirection:"column",gap:12}}>
+        {!mob&&<div className="no-print" style={{width:380,minWidth:380,background:"#1E1A28",borderLeft:"1px solid #2A2538",overflowY:"auto",overflowX:"hidden",padding:20,display:"flex",flexDirection:"column",gap:12}}>
           <TabBar/><PanelContent/></div>}
       </div>
       {/* Mobile FAB + Sheet */}
