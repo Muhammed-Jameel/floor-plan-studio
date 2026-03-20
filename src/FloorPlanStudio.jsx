@@ -39,10 +39,10 @@ s.textContent=`@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity
 @keyframes pu{0%,100%{opacity:1}50%{opacity:.6}}
 .fps-fade{animation:fi .3s ease both}.fps-scale{animation:si .25s ease both}
 .fps-btn{transition:all .15s ease!important}.fps-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.fps-btn:active{transform:translateY(0);filter:brightness(.95)}
-.fps-card{transition:border-color .2s,box-shadow .2s,transform .15s!important}.fps-card:hover{border-color:#C8A951!important;box-shadow:0 4px 20px rgba(200,169,81,.15)!important;transform:translateY(-2px)}
-.fps-input{transition:border-color .2s,box-shadow .2s!important}.fps-input:focus{border-color:#C8A951!important;box-shadow:0 0 0 2px rgba(200,169,81,.2)!important}
-.fps-tab{transition:all .2s!important}.fps-tab:hover{border-color:#C8A951!important;color:#C8A951!important}
-.fps-li{transition:background .15s,color .15s!important}.fps-li:hover{background:rgba(200,169,81,.08)!important}
+.fps-card{transition:border-color .2s,box-shadow .2s,transform .15s!important}.fps-card:hover{border-color:#845EC2!important;box-shadow:0 4px 20px rgba(132,94,194,.15)!important;transform:translateY(-2px)}
+.fps-input{transition:border-color .2s,box-shadow .2s!important}.fps-input:focus{border-color:#845EC2!important;box-shadow:0 0 0 2px rgba(132,94,194,.2)!important}
+.fps-tab{transition:all .2s!important}.fps-tab:hover{border-color:#845EC2!important;color:#845EC2!important}
+.fps-li{transition:background .15s,color .15s!important}.fps-li:hover{background:rgba(132,94,194,.08)!important}
 .fps-sheet{transition:transform .35s cubic-bezier(.4,0,.2,1)!important}
 @media print{.no-print{display:none!important}.print-only{display:block!important}}`;
 document.head.appendChild(s)}
@@ -83,9 +83,9 @@ function RoomSVG({rm,sc,sel,onPD}){
   return(<g onPointerDown={e=>{e.stopPropagation();onPD(e,rm.id)}} style={{cursor:"move",touchAction:"none"}}>
     {rm.type==="stairs"&&<rect x={rx} y={ry} width={rw} height={rh} fill="url(#stP)"/>}
     <rect x={rx} y={ry} width={rw} height={rh} fill={cl} opacity={rm.type==="stairs"?.5:.92} style={{transition:"opacity .15s"}}/>
-    {sel&&<rect x={rx-1} y={ry-1} width={rw+2} height={rh+2} fill="none" stroke="#E8A030" strokeWidth={2.5} strokeDasharray="6,3" style={{animation:"pu 2s ease infinite"}}/>}
-    {!m&&<text x={rx+rw/2} y={ry+rh/2-(t?0:2.5)} textAnchor="middle" fontFamily="Outfit" fontSize={f1} fill="#3A3530" fontWeight="500" pointerEvents="none">{rm.name}</text>}
-    {!m&&!t&&<text x={rx+rw/2} y={ry+rh/2+5.5} textAnchor="middle" fontFamily="Outfit" fontSize={f2} fill="#8A8078" pointerEvents="none">{rm.w}x{rm.h}m {a%1===0?a:a.toFixed(1)}m2</text>}
+    {sel&&<rect x={rx-1} y={ry-1} width={rw+2} height={rh+2} fill="none" stroke="#00C9A7" strokeWidth={2.5} strokeDasharray="6,3" style={{animation:"pu 2s ease infinite"}}/>}
+    {!m&&<text x={rx+rw/2} y={ry+rh/2-(t?0:2.5)} textAnchor="middle" fontFamily="Outfit" fontSize={f1} fill="#3A3548" fontWeight="500" pointerEvents="none">{rm.name}</text>}
+    {!m&&!t&&<text x={rx+rw/2} y={ry+rh/2+5.5} textAnchor="middle" fontFamily="Outfit" fontSize={f2} fill="#8A80A0" pointerEvents="none">{rm.w}x{rm.h}m {a%1===0?a:a.toFixed(1)}m2</text>}
   </g>);
 }
 
@@ -93,7 +93,7 @@ function Handles({rm,scale,onHD,mob}){
   const rx=PAD+rm.x*scale,ry=PAD+rm.y*scale,rw=rm.w*scale,rh=rm.h*scale,hs=mob?12:7;
   const H=[["nw",rx,ry],["n",rx+rw/2,ry],["ne",rx+rw,ry],["e",rx+rw,ry+rh/2],["se",rx+rw,ry+rh],["s",rx+rw/2,ry+rh],["sw",rx,ry+rh],["w",rx,ry+rh/2]];
   return (<g>{H.map(([h,cx,cy])=>(
-    <rect key={h} x={cx-hs/2} y={cy-hs/2} width={hs} height={hs} fill="#E8A030" stroke="#C48020" strokeWidth={.5} rx={mob?2:1}
+    <rect key={h} x={cx-hs/2} y={cy-hs/2} width={hs} height={hs} fill="#00C9A7" stroke="#00A88A" strokeWidth={.5} rx={mob?2:1}
       style={{cursor:h+"-resize",touchAction:"none",transition:"transform .1s"}} onPointerDown={e=>{e.stopPropagation();onHD(e,rm.id,h)}}/>
   ))}</g>);
 }
@@ -102,7 +102,7 @@ function ColSVG({el,sc,sel,onPD}){
   const cx=PAD+el.x*sc,cy=PAD+el.y*sc,r=Math.max((el.size||.3)*sc/2,2);
   return(<g onPointerDown={e=>{e.stopPropagation();onPD(e,el.id)}} style={{cursor:"pointer",touchAction:"none"}}>
     <circle cx={cx} cy={cy} r={r+1} fill="#8A7A68" opacity={.3}/>
-    <circle cx={cx} cy={cy} r={r} fill="#6A5A48" stroke={sel?"#E8A030":"#4A3A28"} strokeWidth={sel?2:1}/>
+    <circle cx={cx} cy={cy} r={r} fill="#6A5A48" stroke={sel?"#00C9A7":"#4A3A28"} strokeWidth={sel?2:1}/>
   </g>);
 }
 
@@ -115,17 +115,17 @@ function DoorSVG({el,sc,sel,onPD,wp}){
   else if(dt==="sliding"){d=isH?<line x1={px} y1={py} x2={px+w} y2={py} stroke="#8B6914" strokeWidth={2.5}/>:<line x1={px} y1={py} x2={px} y2={py+w} stroke="#8B6914" strokeWidth={2.5}/>}
   else{const da=dt==="fold"?"4,3":"6,2";d=isH?<line x1={px} y1={py} x2={px+w} y2={py} stroke="#8B6914" strokeWidth={1.5} strokeDasharray={da}/>:<line x1={px} y1={py} x2={px} y2={py+w} stroke="#8B6914" strokeWidth={1.5} strokeDasharray={da}/>}
   return(<g onPointerDown={e=>{e.stopPropagation();onPD(e,el.id)}} style={{cursor:"pointer",touchAction:"none"}}>
-    <rect x={gx-2} y={gy-2} width={gW+4} height={gH+4} fill="#FEFBF5" opacity={.9}/>{d}
-    {sel&&<rect x={gx-4} y={gy-4} width={gW+8} height={gH+8} fill="none" stroke="#E8A030" strokeWidth={1.5} strokeDasharray="4,2" rx={2}/>}</g>);
+    <rect x={gx-2} y={gy-2} width={gW+4} height={gH+4} fill="#FEFEDF" opacity={.9}/>{d}
+    {sel&&<rect x={gx-4} y={gy-4} width={gW+8} height={gH+8} fill="none" stroke="#00C9A7" strokeWidth={1.5} strokeDasharray="4,2" rx={2}/>}</g>);
 }
 
 function WinSVG({el,sc,sel,onPD,wp}){
   const w=el.width*sc,px=PAD+el.x*sc,py=PAD+el.y*sc,isH=el.orient==="h",o=Math.max(wp*.8,2);
   return(<g onPointerDown={e=>{e.stopPropagation();onPD(e,el.id)}} style={{cursor:"pointer",touchAction:"none"}}>
-    <rect x={isH?px:px-o-1} y={isH?py-o-1:py} width={isH?w:o*2+2} height={isH?o*2+2:w} fill="#FEFBF5" opacity={.9}/>
+    <rect x={isH?px:px-o-1} y={isH?py-o-1:py} width={isH?w:o*2+2} height={isH?o*2+2:w} fill="#FEFEDF" opacity={.9}/>
     {isH?<g><rect x={px} y={py-o} width={w} height={o*2} fill="#D0EAF4" opacity={.3}/><line x1={px} y1={py-o} x2={px+w} y2={py-o} stroke="#5AA0C0" strokeWidth={1.5}/><line x1={px} y1={py+o} x2={px+w} y2={py+o} stroke="#5AA0C0" strokeWidth={1.5}/></g>
     :<g><rect x={px-o} y={py} width={o*2} height={w} fill="#D0EAF4" opacity={.3}/><line x1={px-o} y1={py} x2={px-o} y2={py+w} stroke="#5AA0C0" strokeWidth={1.5}/><line x1={px+o} y1={py} x2={px+o} y2={py+w} stroke="#5AA0C0" strokeWidth={1.5}/></g>}
-    {sel&&<rect x={(isH?px:px-o)-4} y={(isH?py-o:py)-4} width={(isH?w:o*2)+8} height={(isH?o*2:w)+8} fill="none" stroke="#E8A030" strokeWidth={1.5} strokeDasharray="4,2" rx={2}/>}</g>);
+    {sel&&<rect x={(isH?px:px-o)-4} y={(isH?py-o:py)-4} width={(isH?w:o*2)+8} height={(isH?o*2:w)+8} fill="none" stroke="#00C9A7" strokeWidth={1.5} strokeDasharray="4,2" rx={2}/>}</g>);
 }
 
 // ── Editor ──
@@ -223,154 +223,154 @@ function Editor({project,onBack,st}){
   const rProps=()=>{
     if(sEl){
       if(sEl.type==="column"){return(<div className="fps-fade">
-        <div style={{fontSize:16,color:"#C8A951",fontWeight:600,marginBottom:8}}>Column</div>
+        <div style={{fontSize:16,color:"#845EC2",fontWeight:600,marginBottom:8}}>Column</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:8}}>
           <div><div style={lS}>X</div><NumInput step={.1} value={sEl.x} onChange={v=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.x=v})} style={{...iS,padding:"6px",textAlign:"center"}}/></div>
           <div><div style={lS}>Y</div><NumInput step={.1} value={sEl.y} onChange={v=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.y=v})} style={{...iS,padding:"6px",textAlign:"center"}}/></div>
           <div><div style={lS}>Size (m)</div><NumInput step={.05} min={.1} value={sEl.size||.3} onChange={v=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.size=v})} style={{...iS,padding:"6px",textAlign:"center"}}/></div></div>
-        <button className="fps-btn" onClick={delSel} style={{...bS,width:"100%",background:"#5A2A2A",color:"#F0C0C0"}}>Delete</button></div>)}
+        <button className="fps-btn" onClick={delSel} style={{...bS,width:"100%",background:"#4A2848",color:"#E0C0F0"}}>Delete</button></div>)}
       const isD=sEl.type==="door",tm=isD?DT:WT,tk=isD?sEl.doorType:sEl.winType;
       return(<div className="fps-fade">
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><span style={{fontSize:16,color:"#C8A951",fontWeight:600}}>{isD?"Door":"Window"}</span><div style={{flex:1}}/><span style={{fontSize:13,color:"#6A6258"}}>{sEl.width}m</span></div>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><span style={{fontSize:16,color:"#845EC2",fontWeight:600}}>{isD?"Door":"Window"}</span><div style={{flex:1}}/><span style={{fontSize:13,color:"#8A80A0"}}>{sEl.width}m</span></div>
         <div style={{marginBottom:8}}><div style={lS}>Type</div><select className="fps-input" value={tk||Object.keys(tm)[0]} onChange={e=>{const k=e.target.value;upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(!el)return;if(isD)el.doorType=k;else el.winType=k;el.width=tm[k].w})}} style={iS}>{Object.entries(tm).map(([k,v])=><option key={k} value={k}>{v.l} ({v.w}m)</option>)}</select></div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:8}}>
           <div><div style={lS}>X</div><NumInput step={.1} value={sEl.x} onChange={v=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.x=v})} style={{...iS,padding:"6px",textAlign:"center"}}/></div>
           <div><div style={lS}>Y</div><NumInput step={.1} value={sEl.y} onChange={v=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.y=v})} style={{...iS,padding:"6px",textAlign:"center"}}/></div>
           <div><div style={lS}>Width</div><NumInput step={.1} min={.3} value={sEl.width} onChange={v=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.width=v})} style={{...iS,padding:"6px",textAlign:"center"}}/></div></div>
-        <div style={{marginBottom:8}}><div style={lS}>Orientation</div><div style={{display:"flex",gap:6}}>{["h","v"].map(o=><button key={o} className="fps-btn" onClick={()=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.orient=o})} style={{...bS,flex:1,background:sEl.orient===o?"#C8A951":"transparent",color:sEl.orient===o?"#13110F":"#A09888",border:sEl.orient===o?"none":"1px solid #3A3530",padding:"8px"}}>{o==="h"?"Horizontal":"Vertical"}</button>)}</div></div>
-        <button className="fps-btn" onClick={delSel} style={{...bS,width:"100%",background:"#5A2A2A",color:"#F0C0C0"}}>Delete</button></div>)}
+        <div style={{marginBottom:8}}><div style={lS}>Orientation</div><div style={{display:"flex",gap:6}}>{["h","v"].map(o=><button key={o} className="fps-btn" onClick={()=>upd(p=>{const el=p.floors[fIdx].elements.find(x=>x.id===selId);if(el)el.orient=o})} style={{...bS,flex:1,background:sEl.orient===o?"#845EC2":"transparent",color:sEl.orient===o?"#17141E":"#B0A8C4",border:sEl.orient===o?"none":"1px solid #3A3548",padding:"8px"}}>{o==="h"?"Horizontal":"Vertical"}</button>)}</div></div>
+        <button className="fps-btn" onClick={delSel} style={{...bS,width:"100%",background:"#4A2848",color:"#E0C0F0"}}>Delete</button></div>)}
     if(sRoom){return(<div className="fps-fade">
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
         <div style={{width:20,height:20,borderRadius:3,background:TYPES[sRoom.type]?.c,border:"1px solid #ccc",flexShrink:0}}/>
         <div style={{flex:1}}><TextInput value={sRoom.name} onChange={v=>upd(p=>{const r=p.floors[fIdx].rooms.find(r2=>r2.id===selId);if(r)r.name=v})} style={{...iS,fontSize:15,fontWeight:500,padding:"6px 8px"}}/></div>
-        <div style={{fontSize:18,color:"#C8A951",fontWeight:600,whiteSpace:"nowrap"}}>{dA(sRoom.w*sRoom.h,un)}</div></div>
+        <div style={{fontSize:18,color:"#845EC2",fontWeight:600,whiteSpace:"nowrap"}}>{dA(sRoom.w*sRoom.h,un)}</div></div>
       <div style={{marginBottom:8}}><select className="fps-input" value={sRoom.type} onChange={e=>upd(p=>{const r=p.floors[fIdx].rooms.find(r2=>r2.id===selId);if(r)r.type=e.target.value})} style={iS}>{Object.entries(TYPES).map(([k,v])=><option key={k} value={k}>{v.l}</option>)}</select></div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:6,marginBottom:8}}>
         {[["X",sRoom.x,v=>({x:Math.max(0,Math.min(pw-sRoom.w,v))})],["Y",sRoom.y,v=>({y:Math.max(0,Math.min(ph-sRoom.h,v))})],["W",sRoom.w,v=>({w:Math.max(1,v)})],["H",sRoom.h,v=>({h:Math.max(1,v)})]].map(([l,val,fn])=>
           <div key={l}><div style={lS}>{l}</div><NumInput step={.5} min={l==="W"||l==="H"?1:0} value={val} onChange={v=>upd(p=>{const r=p.floors[fIdx].rooms.find(r2=>r2.id===selId);if(r)Object.assign(r,fn(v))})} style={{...iS,padding:"6px",textAlign:"center"}}/></div>)}</div>
-      <div style={{display:"flex",gap:6}}><button className="fps-btn" onClick={dupRm} style={{...bS,flex:1,background:"#C8A951",color:"#13110F"}}>Duplicate</button><button className="fps-btn" onClick={delSel} style={{...bS,flex:1,background:"#5A2A2A",color:"#F0C0C0"}}>Delete</button></div></div>)}
-    return <div style={{color:"#5A5550",fontSize:13,fontStyle:"italic",textAlign:"center",padding:"16px 0"}}>{tool==="select"?"Tap a room or element to edit":"Tap on the plan to place"}</div>};
+      <div style={{display:"flex",gap:6}}><button className="fps-btn" onClick={dupRm} style={{...bS,flex:1,background:"#845EC2",color:"#FFFFFF"}}>Duplicate</button><button className="fps-btn" onClick={delSel} style={{...bS,flex:1,background:"#4A2848",color:"#E0C0F0"}}>Delete</button></div></div>)}
+    return <div style={{color:"#5A5568",fontSize:13,fontStyle:"italic",textAlign:"center",padding:"16px 0"}}>{tool==="select"?"Tap a room or element to edit":"Tap on the plan to place"}</div>};
 
   const rList=()=>(<div className="fps-fade">
     <div style={{display:"flex",flexDirection:"column",gap:2,maxHeight:mob?120:180,overflowY:"auto"}}>
-      {rms.map(rm=><div key={rm.id} className="fps-li" onClick={()=>selRoom(rm.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"6px 8px",borderRadius:4,cursor:"pointer",fontSize:12,background:rm.id===selId&&selCat==="room"?"rgba(200,169,81,.12)":"transparent",color:rm.id===selId&&selCat==="room"?"#E8A030":"#C4BAB0"}}>
-        <div style={{width:10,height:10,borderRadius:2,background:TYPES[rm.type]?.c||"#EEE",flexShrink:0}}/><div style={{flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{rm.name}</div><div style={{color:"#6A6258",fontSize:10,flexShrink:0}}>{rm.w}x{rm.h}</div></div>)}</div>
-    <button className="fps-btn" onClick={addRm} style={{...bS,background:"#C8A951",color:"#13110F",width:"100%",marginTop:6,padding:"10px"}}>+ Add Room</button>
-    {els.length>0&&<div style={{marginTop:8}}><div style={{fontSize:11,color:"#C8A951",fontWeight:500,borderBottom:"1px solid #2A2520",paddingBottom:3,marginBottom:3}}>Doors, Windows, Columns ({els.length})</div>
+      {rms.map(rm=><div key={rm.id} className="fps-li" onClick={()=>selRoom(rm.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"6px 8px",borderRadius:4,cursor:"pointer",fontSize:12,background:rm.id===selId&&selCat==="room"?"rgba(132,94,194,.12)":"transparent",color:rm.id===selId&&selCat==="room"?"#00C9A7":"#D0C8E0"}}>
+        <div style={{width:10,height:10,borderRadius:2,background:TYPES[rm.type]?.c||"#EEE",flexShrink:0}}/><div style={{flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{rm.name}</div><div style={{color:"#8A80A0",fontSize:10,flexShrink:0}}>{rm.w}x{rm.h}</div></div>)}</div>
+    <button className="fps-btn" onClick={addRm} style={{...bS,background:"#845EC2",color:"#FFFFFF",width:"100%",marginTop:6,padding:"10px"}}>+ Add Room</button>
+    {els.length>0&&<div style={{marginTop:8}}><div style={{fontSize:11,color:"#845EC2",fontWeight:500,borderBottom:"1px solid #2A2538",paddingBottom:3,marginBottom:3}}>Doors, Windows, Columns ({els.length})</div>
       <div style={{display:"flex",flexDirection:"column",gap:2,maxHeight:mob?80:120,overflowY:"auto"}}>
-        {els.map(el=><div key={el.id} className="fps-li" onClick={()=>selEl(el.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"5px 8px",borderRadius:4,cursor:"pointer",fontSize:11,background:el.id===selId&&selCat==="element"?"rgba(200,169,81,.12)":"transparent",color:el.id===selId&&selCat==="element"?"#E8A030":"#C4BAB0"}}>
+        {els.map(el=><div key={el.id} className="fps-li" onClick={()=>selEl(el.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"5px 8px",borderRadius:4,cursor:"pointer",fontSize:11,background:el.id===selId&&selCat==="element"?"rgba(132,94,194,.12)":"transparent",color:el.id===selId&&selCat==="element"?"#00C9A7":"#D0C8E0"}}>
           <span style={{fontSize:10,fontWeight:600,color:el.type==="door"?"#8B6914":el.type==="column"?"#6A5A48":"#5AA0C0",width:14}}>{el.type==="door"?"D":el.type==="column"?"C":"W"}</span>
           <div style={{flex:1}}>{el.type==="door"?(DT[el.doorType]?.l||"Door"):el.type==="column"?"Column "+(el.size||.3)+"m":(WT[el.winType]?.l||"Window")}</div></div>)}</div></div>}
   </div>);
 
   const rSummary=()=>(<div className="fps-fade">
-    <div style={{fontSize:13,color:"#C8A951",fontWeight:600,marginBottom:8}}>Area Summary - {fl.name}</div>
+    <div style={{fontSize:13,color:"#845EC2",fontWeight:600,marginBottom:8}}>Area Summary - {fl.name}</div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
-      <div style={{background:"#2A2520",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#6A6258"}}>Plot Area</div><div style={{fontSize:16,color:"#FDF8F0"}}>{dA(plotA,un)}</div></div>
-      <div style={{background:"#2A2520",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#6A6258"}}>Used</div><div style={{fontSize:16,color:"#C8A951"}}>{dA(tA,un)}</div></div>
-      <div style={{background:"#2A2520",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#6A6258"}}>Remaining</div><div style={{fontSize:16,color:freeA<0?"#E05050":"#8BC08A"}}>{dA(freeA,un)}</div></div>
-      <div style={{background:"#2A2520",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#6A6258"}}>Coverage</div><div style={{fontSize:16,color:"#FDF8F0"}}>{(tA/plotA*100).toFixed(1)}%</div></div>
+      <div style={{background:"#2A2538",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#8A80A0"}}>Plot Area</div><div style={{fontSize:16,color:"#FFFFFF"}}>{dA(plotA,un)}</div></div>
+      <div style={{background:"#2A2538",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#8A80A0"}}>Used</div><div style={{fontSize:16,color:"#845EC2"}}>{dA(tA,un)}</div></div>
+      <div style={{background:"#2A2538",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#8A80A0"}}>Remaining</div><div style={{fontSize:16,color:freeA<0?"#E05050":"#00C9A7"}}>{dA(freeA,un)}</div></div>
+      <div style={{background:"#2A2538",padding:8,borderRadius:4}}><div style={{fontSize:10,color:"#8A80A0"}}>Coverage</div><div style={{fontSize:16,color:"#FFFFFF"}}>{(tA/plotA*100).toFixed(1)}%</div></div>
     </div>
-    <div style={{fontSize:11,color:"#C8A951",fontWeight:500,borderBottom:"1px solid #2A2520",paddingBottom:3,marginBottom:6}}>By Type</div>
+    <div style={{fontSize:11,color:"#845EC2",fontWeight:500,borderBottom:"1px solid #2A2538",paddingBottom:3,marginBottom:6}}>By Type</div>
     <div style={{display:"flex",flexDirection:"column",gap:3,marginBottom:10}}>
       {Object.entries(byType).sort((a,b)=>b[1]-a[1]).map(([k,v])=><div key={k} style={{display:"flex",alignItems:"center",gap:6,fontSize:11}}>
         <div style={{width:10,height:10,borderRadius:2,background:TYPES[k]?.c||"#ccc",flexShrink:0}}/>
-        <div style={{flex:1,color:"#C4BAB0"}}>{TYPES[k]?.l||k}</div>
-        <div style={{color:"#6A6258"}}>{dA(v,un)}</div>
-        <div style={{width:40,height:4,background:"#2A2520",borderRadius:2,overflow:"hidden"}}><div style={{width:(v/plotA*100)+"%",height:4,background:TYPES[k]?.c||"#888",borderRadius:2}}/></div></div>)}
+        <div style={{flex:1,color:"#D0C8E0"}}>{TYPES[k]?.l||k}</div>
+        <div style={{color:"#8A80A0"}}>{dA(v,un)}</div>
+        <div style={{width:40,height:4,background:"#2A2538",borderRadius:2,overflow:"hidden"}}><div style={{width:(v/plotA*100)+"%",height:4,background:TYPES[k]?.c||"#888",borderRadius:2}}/></div></div>)}
     </div>
-    <div style={{fontSize:11,color:"#C8A951",fontWeight:500,borderBottom:"1px solid #2A2520",paddingBottom:3,marginBottom:6}}>Floor Height</div>
+    <div style={{fontSize:11,color:"#845EC2",fontWeight:500,borderBottom:"1px solid #2A2538",paddingBottom:3,marginBottom:6}}>Floor Height</div>
     <div style={{display:"flex",gap:6,alignItems:"center",marginBottom:8}}>
       <NumInput step={.1} min={2} value={fh} onChange={v=>upd(p=>{p.floors[fIdx].height=v})} style={{...iS,width:70,textAlign:"center"}}/>
-      <span style={{fontSize:12,color:"#6A6258"}}>m ({(fh*M2FT).toFixed(1)} ft)</span></div>
-    {stairInfo&&<div style={{background:"#2A2520",padding:10,borderRadius:4,marginBottom:8}}>
-      <div style={{fontSize:11,color:"#C8A951",fontWeight:500,marginBottom:4}}>Staircase Calculator</div>
-      <div style={{fontSize:11,color:"#C4BAB0",lineHeight:1.6}}>
+      <span style={{fontSize:12,color:"#8A80A0"}}>m ({(fh*M2FT).toFixed(1)} ft)</span></div>
+    {stairInfo&&<div style={{background:"#2A2538",padding:10,borderRadius:4,marginBottom:8}}>
+      <div style={{fontSize:11,color:"#845EC2",fontWeight:500,marginBottom:4}}>Staircase Calculator</div>
+      <div style={{fontSize:11,color:"#D0C8E0",lineHeight:1.6}}>
         Steps: {stairInfo.numSteps} | Riser: {(stairInfo.riserH*100).toFixed(1)}cm | Tread: {(stairInfo.treadD*100).toFixed(0)}cm | Run length: {stairInfo.runLen.toFixed(1)}m</div></div>}
   </div>);
 
   const rSet=()=>{const isImp=un==="imperial";return(<div className="fps-fade">
     <div style={{marginBottom:10}}><div style={lS}>Project Name</div><TextInput value={proj.name} onChange={v=>upd(p=>{p.name=v})} style={iS}/></div>
-    <div style={{marginBottom:10}}><div style={lS}>Unit System</div><div style={{display:"flex",gap:6}}>{["metric","imperial"].map(u=><button key={u} className="fps-btn" onClick={()=>upd(p=>{p.units=u})} style={{...bS,flex:1,background:un===u?"#C8A951":"transparent",color:un===u?"#13110F":"#A09888",border:un===u?"none":"1px solid #3A3530",padding:"8px"}}>{u==="metric"?"Metric":"Imperial"}</button>)}</div></div>
+    <div style={{marginBottom:10}}><div style={lS}>Unit System</div><div style={{display:"flex",gap:6}}>{["metric","imperial"].map(u=><button key={u} className="fps-btn" onClick={()=>upd(p=>{p.units=u})} style={{...bS,flex:1,background:un===u?"#845EC2":"transparent",color:un===u?"#17141E":"#B0A8C4",border:un===u?"none":"1px solid #3A3548",padding:"8px"}}>{u==="metric"?"Metric":"Imperial"}</button>)}</div></div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
       <div><div style={lS}>Width {isImp?"(ft)":"(m)"}</div><NumInput min={1} step={1} value={isImp?+(pw*M2FT).toFixed(1):pw} onChange={v=>upd(p=>{p.plotWidth=isImp?Math.max(1,+(v/M2FT).toFixed(2)):Math.max(1,v)})} style={iS}/></div>
       <div><div style={lS}>Height {isImp?"(ft)":"(m)"}</div><NumInput min={1} step={1} value={isImp?+(ph*M2FT).toFixed(1):ph} onChange={v=>upd(p=>{p.plotHeight=isImp?Math.max(1,+(v/M2FT).toFixed(2)):Math.max(1,v)})} style={iS}/></div></div>
     <div style={{marginBottom:10}}><div style={lS}>Wall Thickness {isImp?"(in)":"(cm)"}</div>
       <NumInput min={1} step={1} value={isImp?+((wt*100)*CM2IN).toFixed(1):Math.round(wt*100)} onChange={v=>upd(p=>{p.wallThickness=isImp?Math.max(.01,v/CM2IN/100):Math.max(.01,v/100)})} style={iS}/>
-      <div style={{fontSize:10,color:"#5A5550",marginTop:3}}>Outer: {wD(+(wt*1.5*100).toFixed(0),un)}</div></div>
+      <div style={{fontSize:10,color:"#5A5568",marginTop:3}}>Outer: {wD(+(wt*1.5*100).toFixed(0),un)}</div></div>
     <div style={{display:"flex",gap:6,marginBottom:10}}>
-      <button className="fps-btn" onClick={expJ} style={{...bS,flex:1,background:"transparent",border:"1px solid #3A3530",color:"#A09888"}}>Export JSON</button>
-      <button className="fps-btn" onClick={printPlan} style={{...bS,flex:1,background:"transparent",border:"1px solid #3A3530",color:"#A09888"}}>Print / PDF</button></div>
-    <div style={{fontSize:11,color:"#C8A951",fontWeight:500,borderBottom:"1px solid #2A2520",paddingBottom:3,marginBottom:6}}>Legend</div>
-    <div style={{display:"flex",flexWrap:"wrap",gap:"4px 10px"}}>{Object.entries(TYPES).map(([k,v])=><div key={k} style={{display:"flex",alignItems:"center",gap:3}}><div style={{width:9,height:9,borderRadius:2,background:v.c}}/><span style={{fontSize:9,color:"#8A8078"}}>{v.l}</span></div>)}</div>
+      <button className="fps-btn" onClick={expJ} style={{...bS,flex:1,background:"transparent",border:"1px solid #3A3548",color:"#B0A8C4"}}>Export JSON</button>
+      <button className="fps-btn" onClick={printPlan} style={{...bS,flex:1,background:"transparent",border:"1px solid #3A3548",color:"#B0A8C4"}}>Print / PDF</button></div>
+    <div style={{fontSize:11,color:"#845EC2",fontWeight:500,borderBottom:"1px solid #2A2538",paddingBottom:3,marginBottom:6}}>Legend</div>
+    <div style={{display:"flex",flexWrap:"wrap",gap:"4px 10px"}}>{Object.entries(TYPES).map(([k,v])=><div key={k} style={{display:"flex",alignItems:"center",gap:3}}><div style={{width:9,height:9,borderRadius:2,background:v.c}}/><span style={{fontSize:9,color:"#8A80A0"}}>{v.l}</span></div>)}</div>
   </div>)};
 
   const pTabs=[{k:"props",l:(sRoom||sEl)?"Edit":"Properties"},{k:"rooms",l:"Rooms ("+rms.length+")"},{k:"summary",l:"Summary"},{k:"settings",l:"Settings"}];
   const tools=[{k:"select",l:"Select"},{k:"door",l:"Door"},{k:"window",l:"Window"},{k:"column",l:"Column"}];
 
   const PanelContent=()=>(<div>{pan==="props"&&rProps()}{pan==="rooms"&&rList()}{pan==="summary"&&rSummary()}{pan==="settings"&&rSet()}</div>);
-  const TabBar=({s})=>(<div style={{display:"flex",gap:3,...s}}>{pTabs.map(t=><button key={t.k} className="fps-tab fps-btn" onClick={()=>{setPan(t.k);if(mob)setPanO(true)}} style={{...tS,flex:1,padding:"6px 3px",fontSize:mob?10:10,...(pan===t.k?tA2:{})}}>{t.l}</button>)}</div>);
+  const TabBar=({s})=>(<div style={{display:"flex",gap:5,...s}}>{pTabs.map(t=><button key={t.k} className="fps-tab fps-btn" onClick={()=>{setPan(t.k);if(mob)setPanO(true)}} style={{...tS,flex:1,padding:mob?"8px 6px":"9px 8px",fontSize:mob?10:11,...(pan===t.k?tA2:{})}}>{t.l}</button>)}</div>);
 
   return(
-    <div style={{display:"flex",flexDirection:"column",height:"100vh",background:"#13110F",color:"#FDF8F0",fontFamily:"'Outfit', sans-serif",overflow:"hidden"}}>
+    <div style={{display:"flex",flexDirection:"column",height:"100vh",background:"#17141E",color:"#FFFFFF",fontFamily:"'Outfit', sans-serif",overflow:"hidden"}}>
       {/* Top bar */}
-      <div className="no-print" style={{display:"flex",alignItems:"center",padding:mob?"8px 10px":"10px 16px",borderBottom:"1px solid #2A2520",gap:mob?4:10,flexWrap:"wrap",flexShrink:0}}>
-        <button className="fps-btn" onClick={onBack} style={{...bS,background:"transparent",border:"1px solid #3A3530",color:"#A09888",padding:mob?"6px 8px":"8px 14px"}}>Back</button>
+      <div className="no-print" style={{display:"flex",alignItems:"center",padding:mob?"8px 10px":"10px 16px",borderBottom:"1px solid #2A2538",gap:mob?4:10,flexWrap:"wrap",flexShrink:0}}>
+        <button className="fps-btn" onClick={onBack} style={{...bS,background:"transparent",border:"1px solid #3A3548",color:"#B0A8C4",padding:mob?"6px 8px":"8px 14px"}}>Back</button>
         <div style={{fontFamily:"'Playfair Display', serif",fontSize:mob?13:18,fontWeight:400,flex:1,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-          <span style={{color:"#C8A951",fontWeight:600}}>{proj.name}</span>
-          <span style={{color:"#6A6258",fontSize:mob?9:12,marginLeft:6}}>{pw}x{ph}m walls {Math.round(wt*100)}cm</span></div>
-        <button className="fps-btn" onClick={undo} disabled={!canUndo} style={{...bS,background:"transparent",border:"1px solid #3A3530",color:canUndo?"#A09888":"#3A3530",padding:"6px 10px",fontSize:13}} title="Undo (Ctrl+Z)">&#8630;</button>
-        <button className="fps-btn" onClick={redo} disabled={!canRedo} style={{...bS,background:"transparent",border:"1px solid #3A3530",color:canRedo?"#A09888":"#3A3530",padding:"6px 10px",fontSize:13}} title="Redo (Ctrl+Y)">&#8631;</button>
+          <span style={{color:"#845EC2",fontWeight:600}}>{proj.name}</span>
+          <span style={{color:"#8A80A0",fontSize:mob?9:12,marginLeft:6}}>{pw}x{ph}m walls {Math.round(wt*100)}cm</span></div>
+        <button className="fps-btn" onClick={undo} disabled={!canUndo} style={{...bS,background:"transparent",border:"1px solid #3A3548",color:canUndo?"#B0A8C4":"#3A3548",padding:"6px 10px",fontSize:13}} title="Undo (Ctrl+Z)">&#8630;</button>
+        <button className="fps-btn" onClick={redo} disabled={!canRedo} style={{...bS,background:"transparent",border:"1px solid #3A3548",color:canRedo?"#B0A8C4":"#3A3548",padding:"6px 10px",fontSize:13}} title="Redo (Ctrl+Y)">&#8631;</button>
       </div>
       {/* Toolbar */}
-      <div className="no-print" style={{display:"flex",alignItems:"center",padding:mob?"4px 8px":"6px 16px",borderBottom:"1px solid #2A2520",gap:3,flexShrink:0}}>
-        {tools.map(t=><button key={t.k} className="fps-btn" onClick={()=>{setTool(t.k);if(t.k!=="select")clr()}} style={{...bS,padding:mob?"5px 8px":"6px 12px",fontSize:mob?10:12,background:tool===t.k?"#C8A951":"transparent",color:tool===t.k?"#13110F":"#A09888",border:tool===t.k?"none":"1px solid #3A3530"}}>{t.l}</button>)}
-        <div style={{flex:1}}/>{tool!=="select"&&<span style={{fontSize:10,color:"#C8A951",animation:"pu 2s ease infinite"}}>Click to place</span>}</div>
+      <div className="no-print" style={{display:"flex",alignItems:"center",padding:mob?"4px 8px":"6px 16px",borderBottom:"1px solid #2A2538",gap:3,flexShrink:0}}>
+        {tools.map(t=><button key={t.k} className="fps-btn" onClick={()=>{setTool(t.k);if(t.k!=="select")clr()}} style={{...bS,padding:mob?"5px 8px":"6px 12px",fontSize:mob?10:12,background:tool===t.k?"#845EC2":"transparent",color:tool===t.k?"#17141E":"#B0A8C4",border:tool===t.k?"none":"1px solid #3A3548"}}>{t.l}</button>)}
+        <div style={{flex:1}}/>{tool!=="select"&&<span style={{fontSize:10,color:"#845EC2",animation:"pu 2s ease infinite"}}>Click to place</span>}</div>
       {/* Floor tabs */}
-      <div className="no-print" style={{display:"flex",alignItems:"center",padding:mob?"5px 8px":"8px 16px",gap:3,borderBottom:"1px solid #2A2520",overflowX:"auto",flexShrink:0}}>
+      <div className="no-print" style={{display:"flex",alignItems:"center",padding:mob?"5px 8px":"8px 16px",gap:3,borderBottom:"1px solid #2A2538",overflowX:"auto",flexShrink:0}}>
         {proj.floors.map((f,i)=><button key={f.id} className="fps-tab fps-btn" onClick={()=>{setFIdx(i);clr()}} onDoubleClick={()=>{const n=prompt("Rename:",f.name);if(n)upd(p=>{p.floors[i].name=n})}} style={{...tS,padding:mob?"5px 8px":"6px 14px",fontSize:mob?9:11,whiteSpace:"nowrap",...(i===fIdx?tA2:{})}}>{f.name}{f.height?" ("+f.height+"m)":""}</button>)}
-        <button className="fps-btn" onClick={copyFl} style={{...tS,color:"#6A6258",padding:mob?"5px 8px":"6px 14px",fontSize:mob?9:11}} title="Duplicate current floor">Copy Floor</button>
+        <button className="fps-btn" onClick={copyFl} style={{...tS,color:"#8A80A0",padding:mob?"5px 8px":"6px 14px",fontSize:mob?9:11}} title="Duplicate current floor">Copy Floor</button>
         {showAF?<div style={{display:"flex",gap:3,alignItems:"center"}}><input className="fps-input" autoFocus placeholder="Name..." value={nfn} onChange={e=>setNfn(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")addFl();if(e.key==="Escape")setShowAF(false)}} style={{...iS,width:80,padding:"4px 6px",fontSize:10}}/>
-          <button className="fps-btn" onClick={addFl} style={{...bS,padding:"4px 6px",fontSize:10,background:"#C8A951",color:"#13110F"}}>OK</button></div>
-        :<button className="fps-btn" onClick={()=>setShowAF(true)} style={{...tS,color:"#6A6258",borderStyle:"dashed",whiteSpace:"nowrap",padding:mob?"5px 8px":"6px 14px",fontSize:mob?9:11}}>+ Floor</button>}
-        <div style={{flex:1}}/><span style={{fontSize:9,color:"#6A6258",whiteSpace:"nowrap"}}>{rms.length}rm | {els.length}el | {dA(tA,un)}</span></div>
+          <button className="fps-btn" onClick={addFl} style={{...bS,padding:"4px 6px",fontSize:10,background:"#845EC2",color:"#FFFFFF"}}>OK</button></div>
+        :<button className="fps-btn" onClick={()=>setShowAF(true)} style={{...tS,color:"#8A80A0",borderStyle:"dashed",whiteSpace:"nowrap",padding:mob?"5px 8px":"6px 14px",fontSize:mob?9:11}}>+ Floor</button>}
+        <div style={{flex:1}}/><span style={{fontSize:9,color:"#8A80A0",whiteSpace:"nowrap"}}>{rms.length}rm | {els.length}el | {dA(tA,un)}</span></div>
       {/* Main */}
       <div style={{display:"flex",flex:1,overflow:"hidden",position:"relative"}}>
-        <div style={{flex:1,overflow:"auto",background:"#1A1816",padding:mob?6:16,paddingBottom:mob?80:16,cursor:tool!=="select"?"crosshair":"default"}}>
+        <div style={{flex:1,overflow:"auto",background:"#1B1726",padding:mob?6:16,paddingBottom:mob?80:16,cursor:tool!=="select"?"crosshair":"default"}}>
           <svg ref={svgR} width={cvw} height={cvh} viewBox={"0 0 "+cvw+" "+cvh} style={{display:"block",userSelect:"none",touchAction:"pan-x pan-y",margin:"0 auto",cursor:tool!=="select"?"crosshair":"default"}}
             onPointerMove={onPM} onPointerUp={onPU} onPointerLeave={onPU} onPointerDown={onBgDown}>
             <defs>
-              <pattern id="gF" width={sc/2} height={sc/2} patternUnits="userSpaceOnUse" x={PAD} y={PAD}><rect width={sc/2} height={sc/2} fill="none" stroke="#E8E4DC" strokeWidth={.15}/></pattern>
-              <pattern id="gM" width={sc} height={sc} patternUnits="userSpaceOnUse" x={PAD} y={PAD}><rect width={sc} height={sc} fill="none" stroke="#D8D2C8" strokeWidth={.3}/></pattern>
+              <pattern id="gF" width={sc/2} height={sc/2} patternUnits="userSpaceOnUse" x={PAD} y={PAD}><rect width={sc/2} height={sc/2} fill="none" stroke="#E8E4E8" strokeWidth={.15}/></pattern>
+              <pattern id="gM" width={sc} height={sc} patternUnits="userSpaceOnUse" x={PAD} y={PAD}><rect width={sc} height={sc} fill="none" stroke="#D4D0D8" strokeWidth={.3}/></pattern>
               <pattern id="stP" width={4} height={4} patternUnits="userSpaceOnUse"><line x1={0} y1={4} x2={4} y2={0} stroke="#9A8A78" strokeWidth={.6}/></pattern></defs>
-            <rect data-bg="1" width={cvw} height={cvh} fill="#FEFBF5"/>
+            <rect data-bg="1" width={cvw} height={cvh} fill="#FEFEDF"/>
             <rect data-bg="1" x={PAD} y={PAD} width={pw*sc} height={ph*sc} fill="url(#gF)"/>
             <rect data-bg="1" x={PAD} y={PAD} width={pw*sc} height={ph*sc} fill="url(#gM)"/>
             {rms.map(rm=><RoomSVG key={rm.id} rm={rm} sc={sc} sel={rm.id===selId&&selCat==="room"} onPD={onRD}/>)}
-            {rms.map(rm=><rect key={"w"+rm.id} x={PAD+rm.x*sc} y={PAD+rm.y*sc} width={rm.w*sc} height={rm.h*sc} fill="none" stroke="#5C4033" strokeWidth={wp} pointerEvents="none"/>)}
-            <rect x={PAD} y={PAD} width={pw*sc} height={ph*sc} fill="none" stroke="#3A2818" strokeWidth={wp*1.5} pointerEvents="none"/>
+            {rms.map(rm=><rect key={"w"+rm.id} x={PAD+rm.x*sc} y={PAD+rm.y*sc} width={rm.w*sc} height={rm.h*sc} fill="none" stroke="#4A3860" strokeWidth={wp} pointerEvents="none"/>)}
+            <rect x={PAD} y={PAD} width={pw*sc} height={ph*sc} fill="none" stroke="#2A1848" strokeWidth={wp*1.5} pointerEvents="none"/>
             {/* Smart snap guides */}
-            {guides.map((g,i)=>g.type==="v"?<line key={i} x1={PAD+g.pos*sc} y1={PAD+g.from*sc} x2={PAD+g.pos*sc} y2={PAD+g.to*sc} stroke="#E8A030" strokeWidth={.5} strokeDasharray="4,3" pointerEvents="none"/>
-              :<line key={i} x1={PAD+g.from*sc} y1={PAD+g.pos*sc} x2={PAD+g.to*sc} y2={PAD+g.pos*sc} stroke="#E8A030" strokeWidth={.5} strokeDasharray="4,3" pointerEvents="none"/>)}
+            {guides.map((g,i)=>g.type==="v"?<line key={i} x1={PAD+g.pos*sc} y1={PAD+g.from*sc} x2={PAD+g.pos*sc} y2={PAD+g.to*sc} stroke="#00C9A7" strokeWidth={.5} strokeDasharray="4,3" pointerEvents="none"/>
+              :<line key={i} x1={PAD+g.from*sc} y1={PAD+g.pos*sc} x2={PAD+g.to*sc} y2={PAD+g.pos*sc} stroke="#00C9A7" strokeWidth={.5} strokeDasharray="4,3" pointerEvents="none"/>)}
             {/* Elements */}
             {els.map(el=>el.type==="door"?<DoorSVG key={el.id} el={el} sc={sc} sel={el.id===selId&&selCat==="element"} onPD={onED} wp={wp}/>
               :el.type==="window"?<WinSVG key={el.id} el={el} sc={sc} sel={el.id===selId&&selCat==="element"} onPD={onED} wp={wp}/>
               :el.type==="column"?<ColSVG key={el.id} el={el} sc={sc} sel={el.id===selId&&selCat==="element"} onPD={onED}/>:null)}
             {sRoom&&<Handles rm={sRoom} scale={sc} onHD={onHD} mob={mob}/>}
-            <text x={PAD+pw*sc/2} y={PAD+ph*sc+22} textAnchor="middle" fontFamily="Outfit" fontSize={7} fill="#C8A951">{pw} m</text>
-            <text x={PAD+pw*sc+18} y={PAD+ph*sc/2} textAnchor="middle" fontFamily="Outfit" fontSize={7} fill="#C8A951" transform={"rotate(90,"+(PAD+pw*sc+18)+","+(PAD+ph*sc/2)+")"}>{ph} m</text>
+            <text x={PAD+pw*sc/2} y={PAD+ph*sc+22} textAnchor="middle" fontFamily="Outfit" fontSize={7} fill="#845EC2">{pw} m</text>
+            <text x={PAD+pw*sc+18} y={PAD+ph*sc/2} textAnchor="middle" fontFamily="Outfit" fontSize={7} fill="#845EC2" transform={"rotate(90,"+(PAD+pw*sc+18)+","+(PAD+ph*sc/2)+")"}>{ph} m</text>
             {/* Print title block */}
-            <text className="print-only" x={PAD} y={PAD-8} fontFamily="Outfit" fontSize={10} fill="#3A3530" style={{display:"none"}}>{proj.name} - {fl.name} - {pw}x{ph}m - Scale 1:{Math.round(1/(sc/100*100))}</text>
+            <text className="print-only" x={PAD} y={PAD-8} fontFamily="Outfit" fontSize={10} fill="#3A3548" style={{display:"none"}}>{proj.name} - {fl.name} - {pw}x{ph}m - Scale 1:{Math.round(1/(sc/100*100))}</text>
           </svg></div>
         {/* Desktop panel */}
-        {!mob&&<div className="no-print" style={{width:280,minWidth:280,background:"#1C1916",borderLeft:"1px solid #2A2520",overflowY:"auto",padding:14,display:"flex",flexDirection:"column",gap:10}}>
+        {!mob&&<div className="no-print" style={{width:320,minWidth:320,background:"#1E1A28",borderLeft:"1px solid #2A2538",overflowY:"auto",padding:16,display:"flex",flexDirection:"column",gap:12}}>
           <TabBar/><PanelContent/></div>}
       </div>
       {/* Mobile FAB + Sheet */}
-      {mob&&!panO&&<button className="fps-btn no-print" onClick={addRm} style={{position:"fixed",bottom:60,right:14,width:52,height:52,borderRadius:26,background:"#C8A951",color:"#13110F",fontSize:26,border:"none",boxShadow:"0 4px 20px rgba(200,169,81,.4)",cursor:"pointer",zIndex:40,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>+</button>}
-      {mob&&<div className="fps-sheet no-print" style={{position:"fixed",bottom:0,left:0,right:0,background:"#1C1916",borderTop:"2px solid #C8A951",
+      {mob&&!panO&&<button className="fps-btn no-print" onClick={addRm} style={{position:"fixed",bottom:60,right:14,width:52,height:52,borderRadius:26,background:"#845EC2",color:"#FFFFFF",fontSize:26,border:"none",boxShadow:"0 4px 20px rgba(132,94,194,.4)",cursor:"pointer",zIndex:40,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>+</button>}
+      {mob&&<div className="fps-sheet no-print" style={{position:"fixed",bottom:0,left:0,right:0,background:"#1E1A28",borderTop:"2px solid #845EC2",
         transform:panO?"translateY(0)":"translateY(calc(100% - 48px))",maxHeight:"55vh",display:"flex",flexDirection:"column",zIndex:50,borderRadius:"14px 14px 0 0",boxShadow:"0 -8px 30px rgba(0,0,0,.5)"}}>
-        <div onClick={()=>setPanO(!panO)} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"8px 16px",cursor:"pointer",flexShrink:0}}><div style={{width:36,height:4,background:"#4A4540",borderRadius:2,marginBottom:4}}/></div>
+        <div onClick={()=>setPanO(!panO)} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"8px 16px",cursor:"pointer",flexShrink:0}}><div style={{width:36,height:4,background:"#4A4558",borderRadius:2,marginBottom:4}}/></div>
         <TabBar s={{padding:"0 12px 8px",flexShrink:0}}/><div style={{overflowY:"auto",padding:"0 14px 16px",flex:1}}><PanelContent/></div></div>}
     </div>);
 }
@@ -381,41 +381,41 @@ function Library({onOpen,projects,onNew,onDelete,loading}){
   useEffect(()=>{injectCSS()},[]);
   const create=()=>{onNew({name:name.trim()||"Untitled House",plotWidth:pw,plotHeight:ph,wallThickness:wtCm/100,units});setShowNew(false);setName("");setPw(24);setPh(25);setWtCm(20)};
   return(
-    <div style={{minHeight:"100vh",background:"#13110F",color:"#FDF8F0",fontFamily:"'Outfit', sans-serif"}}>
+    <div style={{minHeight:"100vh",background:"#17141E",color:"#FFFFFF",fontFamily:"'Outfit', sans-serif"}}>
       <div style={{maxWidth:900,margin:"0 auto",padding:mob?"24px 14px":"40px 20px"}}>
         <div className="fps-fade" style={{textAlign:"center",marginBottom:mob?24:40}}>
-          <h1 style={{fontFamily:"'Playfair Display', serif",fontSize:mob?28:42,fontWeight:400,letterSpacing:2}}>Floor Plan <span style={{color:"#C8A951",fontWeight:600}}>Studio</span></h1>
-          <p style={{fontSize:mob?11:13,color:"#6A6258",marginTop:4,letterSpacing:2}}>DESIGN | EDIT | SAVE</p>
-          <div style={{width:50,height:1.5,background:"#C8A951",margin:"14px auto 0"}}/></div>
+          <h1 style={{fontFamily:"'Playfair Display', serif",fontSize:mob?28:42,fontWeight:400,letterSpacing:2}}>Floor Plan <span style={{color:"#845EC2",fontWeight:600}}>Studio</span></h1>
+          <p style={{fontSize:mob?11:13,color:"#8A80A0",marginTop:4,letterSpacing:2}}>DESIGN | EDIT | SAVE</p>
+          <div style={{width:50,height:1.5,background:"#845EC2",margin:"14px auto 0"}}/></div>
         <div className="fps-fade" style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,gap:8,animationDelay:".1s"}}>
           <h2 style={{fontFamily:"'Playfair Display', serif",fontSize:mob?17:20,fontWeight:400}}>My Projects</h2>
-          <button className="fps-btn" onClick={()=>setShowNew(true)} style={{...bS,background:"#C8A951",color:"#13110F",fontSize:mob?12:13,padding:mob?"10px 16px":"10px 20px"}}>+ New Project</button></div>
-        {showNew&&<div className="fps-scale" style={{background:"#1C1916",border:"1px solid #2A2520",borderRadius:8,padding:mob?14:20,marginBottom:20}}>
+          <button className="fps-btn" onClick={()=>setShowNew(true)} style={{...bS,background:"#845EC2",color:"#FFFFFF",fontSize:mob?12:13,padding:mob?"10px 16px":"10px 20px"}}>+ New Project</button></div>
+        {showNew&&<div className="fps-scale" style={{background:"#1E1A28",border:"1px solid #2A2538",borderRadius:8,padding:mob?14:20,marginBottom:20}}>
           <h3 style={{fontFamily:"'Playfair Display', serif",fontSize:16,fontWeight:400,marginBottom:12}}>Create New House</h3>
-          <div style={{display:"flex",flexDirection:mob?"column":"row",gap:12,alignItems:mob?"stretch":"flex-end"}}>
-            <div style={{flex:mob?undefined:1}}><div style={lS}>Project Name</div>
-              <input className="fps-input" autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Damascus Villa" onKeyDown={e=>{if(e.key==="Enter")create()}} style={{...iS,padding:"10px"}}/></div>
-            <div><div style={lS}>Units</div><div style={{display:"flex",gap:4}}>{["metric","imperial"].map(u=><button key={u} className="fps-btn" onClick={()=>setUnits(u)} style={{...bS,flex:1,padding:"8px",fontSize:11,background:units===u?"#C8A951":"transparent",color:units===u?"#13110F":"#A09888",border:units===u?"none":"1px solid #3A3530"}}>{u==="metric"?"Metric":"Imperial"}</button>)}</div></div>
-            <div style={{display:"flex",gap:8}}>
-              <div style={{flex:1}}><div style={lS}>{units==="imperial"?"Width (ft)":"Width (m)"}</div><input className="fps-input" type="number" min={1} value={pw} onChange={e=>setPw(Math.max(1,+e.target.value))} style={{...iS,padding:"10px"}}/></div>
-              <div style={{flex:1}}><div style={lS}>{units==="imperial"?"Height (ft)":"Height (m)"}</div><input className="fps-input" type="number" min={1} value={ph} onChange={e=>setPh(Math.max(1,+e.target.value))} style={{...iS,padding:"10px"}}/></div>
-              <div style={{flex:1}}><div style={lS}>{units==="imperial"?"Wall (in)":"Wall (cm)"}</div><input className="fps-input" type="number" min={1} value={wtCm} onChange={e=>setWtCm(Math.max(1,+e.target.value))} style={{...iS,padding:"10px"}}/></div></div>
-            <div style={{display:"flex",gap:8}}>
-              <button className="fps-btn" onClick={create} style={{...bS,flex:1,background:"#C8A951",color:"#13110F",padding:"10px 20px"}}>Create</button>
-              <button className="fps-btn" onClick={()=>setShowNew(false)} style={{...bS,flex:1,background:"transparent",border:"1px solid #3A3530",color:"#6A6258",padding:"10px 20px"}}>Cancel</button></div></div>
-          <div style={{fontSize:11,color:"#6A6258",marginTop:8,textAlign:"center"}}>{pw}x{ph}{units==="imperial"?"ft":"m"} = {pw*ph} {units==="imperial"?"ft2":"m2"} | Walls: {wtCm}{units==="imperial"?"in":"cm"}</div></div>}
-        {loading?<div style={{textAlign:"center",padding:40,color:"#6A6258"}}>Loading...</div>
-        :projects.length===0?<div className="fps-fade" style={{textAlign:"center",padding:mob?40:60,color:"#4A4540"}}><div style={{fontSize:15}}>No projects yet</div><div style={{fontSize:12,marginTop:4,color:"#3A3530"}}>Create your first floor plan above</div></div>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            <div><div style={lS}>Project Name</div>
+              <input className="fps-input" autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Damascus Villa" onKeyDown={e=>{if(e.key==="Enter")create()}} style={{...iS,padding:"12px"}}/></div>
+            <div><div style={lS}>Units</div><div style={{display:"flex",gap:6}}>{["metric","imperial"].map(u=><button key={u} className="fps-btn" onClick={()=>setUnits(u)} style={{...bS,flex:1,padding:"10px",fontSize:12,background:units===u?"#845EC2":"transparent",color:units===u?"#FFFFFF":"#B0A8C4",border:units===u?"none":"1px solid #3A3548"}}>{u==="metric"?"Metric (m, cm)":"Imperial (ft, in)"}</button>)}</div></div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+              <div><div style={lS}>{units==="imperial"?"Width (ft)":"Width (m)"}</div><input className="fps-input" type="number" min={1} value={pw} onChange={e=>setPw(Math.max(1,+e.target.value))} style={{...iS,padding:"12px"}}/></div>
+              <div><div style={lS}>{units==="imperial"?"Height (ft)":"Height (m)"}</div><input className="fps-input" type="number" min={1} value={ph} onChange={e=>setPh(Math.max(1,+e.target.value))} style={{...iS,padding:"12px"}}/></div>
+              <div><div style={lS}>{units==="imperial"?"Wall (in)":"Wall (cm)"}</div><input className="fps-input" type="number" min={1} value={wtCm} onChange={e=>setWtCm(Math.max(1,+e.target.value))} style={{...iS,padding:"12px"}}/></div></div>
+            <div style={{display:"flex",gap:10}}>
+              <button className="fps-btn" onClick={create} style={{...bS,flex:1,background:"#845EC2",color:"#FFFFFF",padding:"12px 20px",fontSize:14}}>Create Project</button>
+              <button className="fps-btn" onClick={()=>setShowNew(false)} style={{...bS,flex:1,background:"transparent",border:"1px solid #3A3548",color:"#8A80A0",padding:"12px 20px",fontSize:14}}>Cancel</button></div></div>
+          <div style={{fontSize:11,color:"#8A80A0",marginTop:8,textAlign:"center"}}>{pw}x{ph}{units==="imperial"?"ft":"m"} = {pw*ph} {units==="imperial"?"ft2":"m2"} | Walls: {wtCm}{units==="imperial"?"in":"cm"}</div></div>}
+        {loading?<div style={{textAlign:"center",padding:40,color:"#8A80A0"}}>Loading...</div>
+        :projects.length===0?<div className="fps-fade" style={{textAlign:"center",padding:mob?40:60,color:"#4A4558"}}><div style={{fontSize:15}}>No projects yet</div><div style={{fontSize:12,marginTop:4,color:"#3A3548"}}>Create your first floor plan above</div></div>
         :<div style={{display:"grid",gridTemplateColumns:mob?"1fr":"repeat(auto-fill, minmax(260px, 1fr))",gap:mob?12:16}}>
-          {projects.map((p,i)=><div key={p.id} className="fps-card fps-fade" style={{background:"#1C1916",border:"1px solid #2A2520",borderRadius:8,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:mob?"row":"column",animationDelay:(i*.06)+"s"}} onClick={()=>onOpen(p.id)}>
-            <div style={{width:mob?80:undefined,height:mob?undefined:100,flexShrink:0,background:"#1A1816",display:"flex",alignItems:"center",justifyContent:"center",borderRight:mob?"1px solid #2A2520":"none",borderBottom:mob?"none":"1px solid #2A2520"}}>
-              <div style={{width:52,height:52,border:"2px solid #3A3530",borderRadius:4,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:"'Playfair Display', serif",fontSize:10,color:"#6A6258"}}>{p.plotWidth||"?"}x{p.plotHeight||"?"}</span></div></div>
+          {projects.map((p,i)=><div key={p.id} className="fps-card fps-fade" style={{background:"#1E1A28",border:"1px solid #2A2538",borderRadius:8,overflow:"hidden",cursor:"pointer",display:"flex",flexDirection:mob?"row":"column",animationDelay:(i*.06)+"s"}} onClick={()=>onOpen(p.id)}>
+            <div style={{width:mob?80:undefined,height:mob?undefined:100,flexShrink:0,background:"#1B1726",display:"flex",alignItems:"center",justifyContent:"center",borderRight:mob?"1px solid #2A2538":"none",borderBottom:mob?"none":"1px solid #2A2538"}}>
+              <div style={{width:52,height:52,border:"2px solid #3A3548",borderRadius:4,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:"'Playfair Display', serif",fontSize:10,color:"#8A80A0"}}>{p.plotWidth||"?"}x{p.plotHeight||"?"}</span></div></div>
             <div style={{padding:mob?"10px 12px":"12px 14px",flex:1,minWidth:0}}>
-              <div style={{fontFamily:"'Playfair Display', serif",fontSize:15,color:"#FDF8F0",marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</div>
-              <div style={{fontSize:11,color:"#6A6258"}}>{p.plotWidth}x{p.plotHeight}m | walls {Math.round((p.wallThickness||.2)*100)}cm</div>
+              <div style={{fontFamily:"'Playfair Display', serif",fontSize:15,color:"#FFFFFF",marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</div>
+              <div style={{fontSize:11,color:"#8A80A0"}}>{p.plotWidth}x{p.plotHeight}m | walls {Math.round((p.wallThickness||.2)*100)}cm</div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:6}}>
-                <div style={{fontSize:10,color:"#4A4540"}}>{p.updatedAt?"Updated "+new Date(p.updatedAt).toLocaleDateString():""}</div>
-                <button className="fps-btn" onClick={e=>{e.stopPropagation();if(confirm("Delete?"))onDelete(p.id)}} style={{fontSize:10,color:"#8B5A5A",background:"transparent",border:"1px solid #3A2020",padding:"3px 10px",borderRadius:3,cursor:"pointer",fontFamily:"Outfit"}}>Delete</button></div></div></div>)}</div>}
+                <div style={{fontSize:10,color:"#4A4558"}}>{p.updatedAt?"Updated "+new Date(p.updatedAt).toLocaleDateString():""}</div>
+                <button className="fps-btn" onClick={e=>{e.stopPropagation();if(confirm("Delete?"))onDelete(p.id)}} style={{fontSize:10,color:"#7A4880",background:"transparent",border:"1px solid #2A1838",padding:"3px 10px",borderRadius:3,cursor:"pointer",fontFamily:"Outfit"}}>Delete</button></div></div></div>)}</div>}
       </div></div>);
 }
 
@@ -434,7 +434,7 @@ export default function FloorPlanStudio({storage:st}){
 }
 
 const bS={padding:"8px 14px",borderRadius:4,border:"none",fontFamily:"'Outfit', sans-serif",fontSize:12,fontWeight:500,cursor:"pointer",letterSpacing:.5};
-const iS={background:"#2A2520",border:"1px solid #3A3530",color:"#FDF8F0",padding:"8px 10px",borderRadius:4,fontFamily:"'Outfit', sans-serif",fontSize:13,outline:"none",width:"100%",WebkitAppearance:"none"};
-const lS={fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:"#6A6258",marginBottom:4};
-const tS={background:"transparent",border:"1px solid #3A3530",color:"#A09888",padding:"6px 16px",fontFamily:"'Outfit', sans-serif",fontSize:11,letterSpacing:1.5,textTransform:"uppercase",cursor:"pointer",borderRadius:3};
-const tA2={background:"#C8A951",borderColor:"#C8A951",color:"#13110F",fontWeight:500};
+const iS={background:"#2A2538",border:"1px solid #3A3548",color:"#FFFFFF",padding:"8px 10px",borderRadius:4,fontFamily:"'Outfit', sans-serif",fontSize:13,outline:"none",width:"100%",WebkitAppearance:"none"};
+const lS={fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:"#8A80A0",marginBottom:4};
+const tS={background:"transparent",border:"1px solid #3A3548",color:"#B0A8C4",padding:"8px 14px",fontFamily:"'Outfit', sans-serif",fontSize:11,letterSpacing:1,textTransform:"uppercase",cursor:"pointer",borderRadius:4};
+const tA2={background:"#845EC2",borderColor:"#845EC2",color:"#FFFFFF",fontWeight:500};
