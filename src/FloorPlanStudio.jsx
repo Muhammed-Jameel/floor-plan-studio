@@ -2140,7 +2140,7 @@ function Editor({ project, onBack, st }) {
   ];
 
   const PanelContent = () => (
-    <div style={{ padding: "0 2px", overflow: "hidden" }}>
+    <div style={{ width: "100%", minWidth: 0 }}>
       {pan === "props" && rProps()}
       {pan === "rooms" && rList()}
       {pan === "summary" && rSummary()}
@@ -2423,6 +2423,7 @@ function Editor({ project, onBack, st }) {
           ref={wrapR}
           style={{
             flex: 1,
+            minWidth: 0,
             overflow: drag ? "hidden" : "auto",
             background: "#1B1726",
             padding: mob ? 6 : 16,
@@ -2657,7 +2658,6 @@ function Editor({ project, onBack, st }) {
               background: "#1E1A28",
               borderLeft: "1px solid #2A2538",
               overflowY: "auto",
-              overflowX: "hidden",
               padding: 20,
               display: "flex",
               flexDirection: "column",
