@@ -1,8 +1,6 @@
 -- ============================================
 -- Floor Plan Studio — Supabase Database Setup
 -- ============================================
--- Run this in: Supabase Dashboard → SQL Editor → New Query
--- This creates the table, security policies, and indexes needed.
 
 -- 1. Projects table (stores all plan data as JSON strings)
 CREATE TABLE IF NOT EXISTS projects (
@@ -55,15 +53,3 @@ CREATE TRIGGER projects_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
 
--- ============================================
--- Optional: Enable Google OAuth
--- ============================================
--- Go to Supabase Dashboard → Authentication → Providers → Google
--- You'll need a Google Cloud Console OAuth client ID and secret.
--- Steps:
---   1. Go to console.cloud.google.com
---   2. Create a project (or use existing)
---   3. APIs & Services → Credentials → Create OAuth 2.0 Client ID
---   4. Add authorized redirect URI:
---      https://YOUR-PROJECT-ID.supabase.co/auth/v1/callback
---   5. Copy Client ID and Secret into Supabase Google provider settings

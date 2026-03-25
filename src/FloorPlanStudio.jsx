@@ -2853,7 +2853,7 @@ function Editor({ project, onBack, st }) {
 }
 
 // ── Library ──
-function Library({ onOpen, projects, onNew, onDelete, loading }) {
+function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
   const [showNew, setShowNew] = useState(false);
   const [name, setName] = useState("");
   const [pw, setPw] = useState(24);
@@ -3262,9 +3262,35 @@ function Library({ onOpen, projects, onNew, onDelete, loading }) {
         className="fps-fade"
         style={{
           textAlign: "center",
-          padding: mob ? "30px 14px" : "50px 20px",
+          padding: mob ? "30px 14px" : "40px 20px",
           borderTop: "1px solid #2A2538",
           marginTop: 40,
+        }}
+      >
+        <button
+          className="fps-btn"
+          onClick={onSupport}
+          style={{
+            ...bS,
+            background: "#845EC2",
+            color: "#fff",
+            padding: "14px 36px",
+            fontSize: 16,
+            borderRadius: 8,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          Support <span style={{ color: "#FF6B8A" }}>❤️</span>
+        </button>
+      </div>
+      <div
+        className="fps-fade"
+        style={{
+          textAlign: "center",
+          padding: mob ? "20px 14px" : "30px 20px",
+          borderTop: "1px solid #2A2538",
         }}
       >
         <a
@@ -3302,6 +3328,511 @@ function Library({ onOpen, projects, onNew, onDelete, loading }) {
         <p style={{ fontSize: 11, color: "#4A4558", marginTop: 12 }}>
           Questions, feedback, or feature requests? We'd love to hear from you.
         </p>
+      </div>
+    </div>
+  );
+}
+
+// ── Support Page ──
+const CRYPTO = [
+  {
+    name: "USDT",
+    net: "TRC-20",
+    addr: "TQWJzX2rcaZmWdeMh833JGNLB4ACbTf4TG",
+    color: "#26A17B",
+    sym: "₮",
+    qr: "/qr-usdt.png",
+  },
+  {
+    name: "Bitcoin",
+    net: "BTC Network",
+    addr: "bc1q8awvdene0kwsejezech7q8rsfg6xl4n0wuz33ws8rzcnyxdnvlns068qgz",
+    color: "#F7931A",
+    sym: "₿",
+    qr: "/qr-btc.png",
+  },
+  {
+    name: "Ethereum",
+    net: "ERC-20",
+    addr: "0x8e1479f895eb93260c4b67d83063b0ddd341533a",
+    color: "#627EEA",
+    sym: "Ξ",
+    qr: "/qr-eth.png",
+  },
+];
+function SupportPage({ onBack }) {
+  const mob = useMob();
+  const [copied, setCopied] = useState(null);
+  useEffect(() => {
+    injectCSS();
+  }, []);
+  const copy = (name, addr) => {
+    navigator.clipboard.writeText(addr);
+    setCopied(name);
+    setTimeout(() => setCopied(null), 2000);
+  };
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#17141E",
+        color: "#FFFFFF",
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1000,
+          margin: "0 auto",
+          padding: mob ? "20px 14px" : "40px 24px",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: mob ? 24 : 36,
+          }}
+        >
+          <button
+            className="fps-btn"
+            onClick={onBack}
+            style={{
+              background: "transparent",
+              border: "1px solid #3A3548",
+              color: "#B0A8C4",
+              padding: "8px 14px",
+              borderRadius: 4,
+              fontFamily: "Outfit",
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            Back
+          </button>
+          <h1
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: mob ? 22 : 32,
+              fontWeight: 400,
+              flex: 1,
+            }}
+          >
+            Support Simple Plan{" "}
+            <span style={{ color: "#845EC2", fontWeight: 600 }}>Space</span>
+          </h1>
+        </div>
+        <p
+          style={{
+            fontSize: mob ? 13 : 15,
+            color: "#B0A8C4",
+            marginBottom: mob ? 20 : 32,
+            maxWidth: 600,
+            lineHeight: 1.6,
+          }}
+        >
+          This project is free and open source. Your support helps keep it
+          alive, pay for hosting, and fund new features. Thank you for being
+          awesome.
+        </p>
+
+        {/* Two columns */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: mob ? "column" : "row",
+            gap: mob ? 24 : 32,
+            alignItems: "flex-start",
+          }}
+        >
+          {/* LEFT: Crypto */}
+          <div style={{ flex: 1, width: "100%" }}>
+            <div
+              style={{
+                fontSize: 13,
+                color: "#845EC2",
+                fontWeight: 600,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 16,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#845EC2"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              Support with Crypto
+            </div>
+
+            {CRYPTO.map((c) => (
+              <div
+                key={c.name}
+                style={{
+                  background: "#1E1A28",
+                  border: "1px solid #2A2538",
+                  borderRadius: 10,
+                  padding: mob ? 16 : 20,
+                  marginBottom: 16,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    marginBottom: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 8,
+                      background: c.color + "20",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: 16, fontWeight: 700, color: c.color }}
+                    >
+                      {c.sym}
+                    </span>
+                  </div>
+                  <div>
+                    <div
+                      style={{ fontSize: 15, color: "#fff", fontWeight: 500 }}
+                    >
+                      {c.name}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#8A80A0" }}>
+                      {c.net}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: mob ? "column" : "row",
+                    gap: 14,
+                    alignItems: mob ? "center" : "flex-start",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "#000",
+                      borderRadius: 8,
+                      padding: 6,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <img
+                      src={c.qr}
+                      alt={c.name + " QR"}
+                      width="148"
+                      height="148"
+                      style={{ display: "block", borderRadius: 4 }}
+                    />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0, width: "100%" }}>
+                    <div
+                      style={{
+                        fontSize: 10,
+                        color: "#8A80A0",
+                        marginBottom: 4,
+                        textTransform: "uppercase",
+                        letterSpacing: 1,
+                      }}
+                    >
+                      Wallet Address
+                    </div>
+                    <div
+                      style={{
+                        background: "#12101A",
+                        border: "1px solid #2A2538",
+                        borderRadius: 6,
+                        padding: "10px 12px",
+                        fontFamily: "monospace",
+                        fontSize: mob ? 9 : 11,
+                        color: "#D0C8E0",
+                        wordBreak: "break-all",
+                        lineHeight: 1.5,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {c.addr}
+                    </div>
+                    <button
+                      className="fps-btn"
+                      onClick={() => copy(c.name, c.addr)}
+                      style={{
+                        background:
+                          copied === c.name ? "#00C9A7" : "transparent",
+                        border:
+                          copied === c.name
+                            ? "1px solid #00C9A7"
+                            : "1px solid #3A3548",
+                        color: copied === c.name ? "#17141E" : "#B0A8C4",
+                        padding: "8px 20px",
+                        borderRadius: 4,
+                        fontFamily: "Outfit",
+                        fontSize: 12,
+                        cursor: "pointer",
+                        fontWeight: 500,
+                        width: "100%",
+                      }}
+                    >
+                      {copied === c.name
+                        ? "Copied to clipboard!"
+                        : "Copy Address"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <p style={{ fontSize: 11, color: "#4A4558", textAlign: "center" }}>
+              Always verify the network matches before sending
+            </p>
+          </div>
+
+          {/* RIGHT: Card / Wise */}
+          <div style={{ flex: 1, width: "100%" }}>
+            <div
+              style={{
+                fontSize: 13,
+                color: "#00C9A7",
+                fontWeight: 600,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 16,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#00C9A7"
+                strokeWidth="2"
+              >
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+              Support with Card
+            </div>
+
+            <div
+              style={{
+                background: "#1E1A28",
+                border: "1px solid #2A2538",
+                borderRadius: 10,
+                padding: mob ? 20 : 28,
+                marginBottom: 16,
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 16,
+                  background: "rgba(132,94,194,.12)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 16px",
+                }}
+              >
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#C493FF"
+                  strokeWidth="2"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                </svg>
+              </div>
+              <h3
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 20,
+                  fontWeight: 400,
+                  marginBottom: 8,
+                }}
+              >
+                Quick Pay with Wise
+              </h3>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "#8A80A0",
+                  marginBottom: 20,
+                  lineHeight: 1.6,
+                }}
+              >
+                Pay any amount with your credit or debit card. No account
+                needed. Processed securely through Wise.
+              </p>
+              <a
+                href="https://wise.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fps-btn"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  background: "#845EC2",
+                  color: "#fff",
+                  padding: "14px 32px",
+                  fontSize: 15,
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  borderRadius: 8,
+                  border: "none",
+                  fontFamily: "Outfit",
+                  cursor: "pointer",
+                  width: "100%",
+                }}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                </svg>
+                Support with Card
+              </a>
+              <p style={{ fontSize: 10, color: "#4A4558", marginTop: 10 }}>
+                Visa, Mastercard, Apple Pay, Google Pay accepted
+              </p>
+            </div>
+
+            <div
+              style={{
+                background: "#1E1A28",
+                border: "1px solid #2A2538",
+                borderRadius: 10,
+                padding: mob ? 20 : 28,
+                textAlign: "center",
+              }}
+            >
+              <h3
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 18,
+                  fontWeight: 400,
+                  marginBottom: 8,
+                }}
+              >
+                Other Ways to Help
+              </h3>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "#8A80A0",
+                  marginBottom: 16,
+                  lineHeight: 1.6,
+                }}
+              >
+                Star the project on GitHub, share it with friends, or send
+                feedback. Every bit counts.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <a
+                  href="https://github.com/Muhammed-Jameel/simple-plan-space"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fps-btn"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    background: "transparent",
+                    border: "1px solid #3A3548",
+                    color: "#B0A8C4",
+                    padding: "12px 20px",
+                    fontSize: 13,
+                    textDecoration: "none",
+                    borderRadius: 6,
+                    fontFamily: "Outfit",
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                  Star on GitHub
+                </a>
+                <a
+                  href="mailto:contact@simpleplan.space?subject=Feedback"
+                  className="fps-btn"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    background: "transparent",
+                    border: "1px solid #3A3548",
+                    color: "#B0A8C4",
+                    padding: "12px 20px",
+                    fontSize: 13,
+                    textDecoration: "none",
+                    borderRadius: 6,
+                    fontFamily: "Outfit",
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="M22 4L12 13L2 4" />
+                  </svg>
+                  Send Feedback
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -3392,6 +3923,8 @@ export default function FloorPlanStudio({ storage: st }) {
   };
   if (view === "editor" && activeProj)
     return <Editor project={activeProj} onBack={goB} st={st} />;
+  if (view === "support")
+    return <SupportPage onBack={() => setView("library")} />;
   return (
     <Library
       projects={projects}
@@ -3399,6 +3932,7 @@ export default function FloorPlanStudio({ storage: st }) {
       onOpen={openP}
       onNew={newP}
       onDelete={delP}
+      onSupport={() => setView("support")}
     />
   );
 }
