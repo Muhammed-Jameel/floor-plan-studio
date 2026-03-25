@@ -1,4 +1,4 @@
-# Floor Plan Studio
+# Simple Plan Space
 
 A free, open-source floor plan design tool that runs in the browser. Create house plans with rooms, doors, windows, columns, and multiple floors — all with drag-and-drop editing, real-time dimensions, and automatic saving.
 
