@@ -764,37 +764,22 @@ function Editor({ project, onBack, st }) {
   const [selId, setSelId] = useState(null);
   const [selCat, setSelCat] = useState("room");
   const [tool, setTool] = useState("select");
-  const [drag, setDrag] = useState(null);
   const [pan, setPan] = useState("props");
   const [panO, setPanO] = useState(false);
   const [showAF, setShowAF] = useState(false);
   const [nfn, setNfn] = useState("");
   const [guides, setGuides] = useState([]);
-  const [dragPos, setDragPos] = useState(null); // lightweight live position during drag
+  const [dragPos, setDragPos] = useState(null);
   const svgR = useRef(null);
   const stR = useRef(null);
   const wrapR = useRef(null);
   const mob = useMob();
-  const dragRef = useRef(null); // stable ref for drag state (no re-render on update)
+  const dragRef = useRef(null);
+  const pidRef = useRef(null); // track pointer id for capture
 
   useEffect(() => {
     injectCSS();
   }, []);
-
-  // Block ALL touch scrolling while actively dragging a room/element
-  useEffect(() => {
-    if (!drag) return;
-    const prevent = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-    document.addEventListener("touchmove", prevent, { passive: false });
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("touchmove", prevent);
-      document.body.style.overflow = "";
-    };
-  }, [!!drag]);
 
   const fl = proj.floors[fIdx] || proj.floors[0];
   const rms = fl?.rooms || [];
@@ -848,14 +833,14 @@ function Editor({ project, onBack, st }) {
   );
 
   const gPt = (e) => {
-    const s = svgR.current,
-      r = s.getBoundingClientRect();
+    const s = svgR.current;
+    if (!s) return { x: 0, y: 0 };
+    const r = s.getBoundingClientRect();
     return {
       x: (e.clientX - r.left) * (cvw / r.width),
       y: (e.clientY - r.top) * (cvh / r.height),
     };
   };
-  // Light select: just mark the ID, don't open panel (avoids layout reflow during drag)
   const selRoomLight = (id) => {
     setSelId(id);
     setSelCat("room");
@@ -866,7 +851,6 @@ function Editor({ project, onBack, st }) {
     setSelCat("element");
     setPan("props");
   };
-  // Full select: also open mobile panel (called on tap/pointerup)
   const selRoomFull = (id) => {
     setSelId(id);
     setSelCat("room");
@@ -887,9 +871,11 @@ function Editor({ project, onBack, st }) {
   const sRoom = selCat === "room" ? rms.find((r) => r.id === selId) : null;
   const sEl = selCat === "element" ? els.find((e) => e.id === selId) : null;
 
+  // ── Pointer Down: ZERO state updates for drag — only refs ──
   const onRD = (e, id) => {
-    if (tool !== "select" || e.button !== 0) return;
+    if (tool !== "select") return;
     e.preventDefault();
+    e.stopPropagation();
     selRoomLight(id);
     const pt = gPt(e),
       rm = rms.find((r) => r.id === id);
@@ -902,12 +888,14 @@ function Editor({ project, onBack, st }) {
       sr: { ...rm },
       moved: false,
     };
-    setDrag(dragRef.current);
-    svgR.current.setPointerCapture(e.pointerId);
+    pidRef.current = e.pointerId;
+    try {
+      svgR.current.setPointerCapture(e.pointerId);
+    } catch (ex) {}
   };
   const onHD = (e, id, h) => {
-    if (e.button !== 0) return;
     e.preventDefault();
+    e.stopPropagation();
     const pt = gPt(e),
       rm = rms.find((r) => r.id === id);
     if (!rm) return;
@@ -920,12 +908,15 @@ function Editor({ project, onBack, st }) {
       sr: { ...rm },
       moved: false,
     };
-    setDrag(dragRef.current);
-    svgR.current.setPointerCapture(e.pointerId);
+    pidRef.current = e.pointerId;
+    try {
+      svgR.current.setPointerCapture(e.pointerId);
+    } catch (ex) {}
   };
   const onED = (e, id) => {
-    if (tool !== "select" || e.button !== 0) return;
+    if (tool !== "select") return;
     e.preventDefault();
+    e.stopPropagation();
     selElLight(id);
     const pt = gPt(e),
       el = els.find((x) => x.id === id);
@@ -938,15 +929,18 @@ function Editor({ project, onBack, st }) {
       sr: { ...el },
       moved: false,
     };
-    setDrag(dragRef.current);
-    svgR.current.setPointerCapture(e.pointerId);
+    pidRef.current = e.pointerId;
+    try {
+      svgR.current.setPointerCapture(e.pointerId);
+    } catch (ex) {}
   };
 
+  // ── Pointer Move: lightweight ref-based, no deep clone ──
   const onPM = (e) => {
     const d = dragRef.current;
     if (!d) return;
+    e.preventDefault();
     d.moved = true;
-    // Canvas pan
     if (d.c === "canvas") {
       if (wrapR.current) {
         wrapR.current.scrollLeft = d.sr.sl - (e.clientX - d.sp.x);
@@ -1012,11 +1006,18 @@ function Editor({ project, onBack, st }) {
       setDragPos({ id: d.id, x: nx, y: ny });
     }
   };
-  const onPU = () => {
+
+  // ── Pointer Up: commit or tap ──
+  const onPU = (e) => {
     const d = dragRef.current;
+    if (pidRef.current != null) {
+      try {
+        svgR.current.releasePointerCapture(pidRef.current);
+      } catch (ex) {}
+    }
+    pidRef.current = null;
     if (d) {
       if (d.moved && dragPos) {
-        // Was a drag — commit final position
         if (d.c === "room") {
           upd((p) => {
             const rm = p.floors[fIdx].rooms.find((r) => r.id === d.id);
@@ -1035,8 +1036,7 @@ function Editor({ project, onBack, st }) {
             el.y = dragPos.y;
           });
         }
-      } else {
-        // Was a tap (no movement) — now open the panel
+      } else if (!d.moved) {
         if (d.c === "room") {
           selRoomFull(d.id);
         }
@@ -1046,7 +1046,6 @@ function Editor({ project, onBack, st }) {
       }
     }
     dragRef.current = null;
-    setDrag(null);
     setDragPos(null);
     setGuides([]);
   };
@@ -1125,8 +1124,10 @@ function Editor({ project, onBack, st }) {
         sr: { sl: wr.scrollLeft, st: wr.scrollTop },
       };
       dragRef.current = dragData;
-      setDrag(dragData);
-      svgR.current.setPointerCapture(e.pointerId);
+      pidRef.current = e.pointerId;
+      try {
+        svgR.current.setPointerCapture(e.pointerId);
+      } catch (ex) {}
     }
   };
 
@@ -2484,12 +2485,12 @@ function Editor({ project, onBack, st }) {
           style={{
             flex: 1,
             minWidth: 0,
-            overflow: drag ? "hidden" : "auto",
+            overflow: "auto",
             background: "#1B1726",
             padding: mob ? 6 : 16,
             paddingBottom: mob ? 80 : 16,
             cursor: tool !== "select" ? "crosshair" : "default",
-            touchAction: drag ? "none" : "auto",
+            touchAction: mob ? "none" : "auto",
           }}
         >
           <svg
