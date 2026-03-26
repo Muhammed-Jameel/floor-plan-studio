@@ -2888,7 +2888,7 @@ function Editor({ project, onBack, st }) {
 }
 
 // ── Library ──
-function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
+function LibraryOld({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
   const [showNew, setShowNew] = useState(false);
   const [name, setName] = useState("");
   const [pw, setPw] = useState(24);
@@ -3475,7 +3475,7 @@ const CRYPTO = [
     qr: "/qr-eth.png",
   },
 ];
-function SupportPage({ onBack }) {
+function SupportPageOld({ onBack }) {
   const mob = useMob();
   const [copied, setCopied] = useState(null);
   useEffect(() => {
@@ -3971,6 +3971,2160 @@ function SupportPage({ onBack }) {
                   Send Feedback
                 </a>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
+  const [showNew, setShowNew] = useState(false);
+  const [name, setName] = useState("");
+  const [pw, setPw] = useState(24);
+  const [ph, setPh] = useState(25);
+  const [wtCm, setWtCm] = useState(20);
+  const [units, setUnits] = useState("metric");
+  const mob = useMob();
+
+  useEffect(() => {
+    injectCSS();
+  }, []);
+
+  const create = () => {
+    onNew({
+      name: name.trim() || "Untitled House",
+      plotWidth: pw,
+      plotHeight: ph,
+      wallThickness: wtCm / 100,
+      units,
+    });
+    setShowNew(false);
+    setName("");
+    setPw(24);
+    setPh(25);
+    setWtCm(20);
+  };
+
+  const presets = [
+    {
+      name: "Compact Family Home",
+      note: "Efficient starter layout",
+      pw: 14,
+      ph: 18,
+      wt: 20,
+      units: "metric",
+    },
+    {
+      name: "Courtyard Villa",
+      note: "Roomier plot with a central void",
+      pw: 24,
+      ph: 28,
+      wt: 25,
+      units: "metric",
+    },
+    {
+      name: "Townhouse Shell",
+      note: "Imperial preset for quick testing",
+      pw: 36,
+      ph: 54,
+      wt: 8,
+      units: "imperial",
+    },
+  ];
+  const heroStats = [
+    { value: "Free", label: "No paywall" },
+    { value: "Multi-floor", label: "Stacked planning" },
+    { value: "Mobile", label: "Phone-friendly editor" },
+    {
+      value: loading ? "..." : String(projects.length).padStart(2, "0"),
+      label: "Projects saved",
+    },
+  ];
+  const featureCards = [
+    {
+      title: "Direct manipulation",
+      body: "Move and resize rooms on the plan itself instead of relying on form fields first.",
+    },
+    {
+      title: "Lightweight workflow",
+      body: "Open the app, sketch, export, and iterate without installing heavyweight desktop software.",
+    },
+    {
+      title: "Open by default",
+      body: "Keep the project free and transparent while still supporting cross-device sync when needed.",
+    },
+  ];
+  const sortedProjects = [...projects].sort(
+    (a, b) =>
+      new Date(b.updatedAt || b.createdAt || 0) -
+      new Date(a.updatedAt || a.createdAt || 0),
+  );
+  const applyPreset = (preset) => {
+    setName(preset.name);
+    setPw(preset.pw);
+    setPh(preset.ph);
+    setWtCm(preset.wt);
+    setUnits(preset.units);
+    setShowNew(true);
+  };
+  const areaLabel =
+    units === "imperial" ? `${Math.round(pw * ph)} ft2` : `${pw * ph} m2`;
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "radial-gradient(circle at top left, rgba(132,94,194,.28), transparent 28%), radial-gradient(circle at top right, rgba(0,201,167,.12), transparent 22%), linear-gradient(180deg, #17141E 0%, #120F18 100%)",
+        color: "#FFFFFF",
+        fontFamily: "'Outfit', sans-serif",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: -120,
+          left: -90,
+          width: mob ? 220 : 320,
+          height: mob ? 220 : 320,
+          borderRadius: "50%",
+          background: "rgba(132,94,194,.14)",
+          filter: "blur(22px)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: 120,
+          right: -120,
+          width: mob ? 240 : 360,
+          height: mob ? 240 : 360,
+          borderRadius: "50%",
+          background: "rgba(0,201,167,.08)",
+          filter: "blur(26px)",
+        }}
+      />
+
+      <div
+        style={{
+          maxWidth: 1180,
+          margin: "0 auto",
+          padding: mob ? "18px 14px 34px" : "28px 24px 46px",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div
+          className="fps-fade"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            marginBottom: mob ? 18 : 22,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                background: "#00C9A7",
+                boxShadow: "0 0 18px rgba(0,201,167,.45)",
+              }}
+            />
+            <div>
+              <div
+                style={{
+                  fontSize: 11,
+                  letterSpacing: 2.4,
+                  textTransform: "uppercase",
+                  color: "#8A80A0",
+                }}
+              >
+                Simple Plan Space
+              </div>
+              <div style={{ fontSize: mob ? 12 : 13, color: "#D8D2E4" }}>
+                Free floor planning, simplified
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <a
+              href="https://github.com/Muhammed-Jameel/simple-plan-space"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="fps-btn"
+              style={{
+                ...bS,
+                background: "rgba(18,16,26,.72)",
+                border: "1px solid rgba(255,255,255,.08)",
+                color: "#D5CEE4",
+                textDecoration: "none",
+                padding: mob ? "10px 14px" : "10px 18px",
+                borderRadius: 12,
+              }}
+            >
+              GitHub
+            </a>
+            <button
+              className="fps-btn"
+              onClick={onSupport}
+              style={{
+                ...bS,
+                background: "rgba(132,94,194,.18)",
+                border: "1px solid rgba(132,94,194,.45)",
+                color: "#F3ECFF",
+                padding: mob ? "10px 14px" : "10px 18px",
+                borderRadius: 12,
+              }}
+            >
+              Support
+            </button>
+          </div>
+        </div>
+
+        <div
+          className="fps-fade"
+          style={{
+            display: "grid",
+            gridTemplateColumns: mob
+              ? "1fr"
+              : "minmax(0,1.08fr) minmax(320px,.92fr)",
+            gap: mob ? 16 : 20,
+            alignItems: "stretch",
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              overflow: "hidden",
+              background:
+                "linear-gradient(135deg, rgba(132,94,194,.24) 0%, rgba(30,26,40,.96) 48%, rgba(19,16,27,.98) 100%)",
+              border: "1px solid rgba(255,255,255,.08)",
+              borderRadius: mob ? 22 : 30,
+              padding: mob ? 20 : 30,
+              boxShadow: "0 16px 60px rgba(0,0,0,.24)",
+            }}
+          >
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                right: -30,
+                bottom: -80,
+                width: 180,
+                height: 180,
+                borderRadius: "50%",
+                background: "rgba(0,201,167,.08)",
+                filter: "blur(10px)",
+              }}
+            />
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "7px 12px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,.06)",
+                border: "1px solid rgba(255,255,255,.08)",
+                fontSize: 11,
+                letterSpacing: 1.4,
+                textTransform: "uppercase",
+                color: "#E8E1F5",
+                marginBottom: 18,
+              }}
+            >
+              Browser-based planning studio
+            </div>
+            <h1
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: mob ? 34 : 60,
+                fontWeight: 400,
+                lineHeight: 1.05,
+                letterSpacing: mob ? 0 : 0.6,
+                marginBottom: 14,
+                maxWidth: 700,
+              }}
+            >
+              Build a clean house plan
+              <span style={{ color: "#00C9A7" }}> without fighting the tool</span>
+            </h1>
+            <p
+              style={{
+                fontSize: mob ? 14 : 18,
+                color: "#C7BED9",
+                lineHeight: 1.7,
+                maxWidth: 630,
+                marginBottom: 22,
+              }}
+            >
+              Sketch rooms, resize spaces, place openings, and organize floors
+              in a layout that stays lightweight. No install, no forced signup,
+              and no pricing trap.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                marginBottom: 24,
+              }}
+            >
+              <button
+                className="fps-btn"
+                onClick={() => setShowNew(true)}
+                style={{
+                  ...bS,
+                  background: "#00C9A7",
+                  color: "#0E1218",
+                  padding: mob ? "14px 20px" : "15px 24px",
+                  borderRadius: 12,
+                  fontSize: mob ? 14 : 15,
+                  fontWeight: 600,
+                }}
+              >
+                Start a New Plan
+              </button>
+              <a
+                href="https://github.com/Muhammed-Jameel/simple-plan-space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fps-btn"
+                style={{
+                  ...bS,
+                  background: "rgba(18,16,26,.55)",
+                  border: "1px solid rgba(255,255,255,.1)",
+                  color: "#E4DDF1",
+                  padding: mob ? "14px 18px" : "15px 22px",
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                View Source
+              </a>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: mob ? "1fr 1fr" : "repeat(4, minmax(0,1fr))",
+                gap: 10,
+                marginBottom: 18,
+              }}
+            >
+              {heroStats.map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    background: "rgba(15,13,22,.48)",
+                    border: "1px solid rgba(255,255,255,.07)",
+                    borderRadius: 16,
+                    padding: mob ? "12px" : "14px",
+                    minHeight: 84,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontSize: mob ? 18 : 22,
+                      color: "#FFFFFF",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {item.value}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#998FB0", lineHeight: 1.5 }}>
+                    {item.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {presets.map((preset) => (
+                <button
+                  key={preset.name}
+                  className="fps-btn"
+                  onClick={() => applyPreset(preset)}
+                  style={{
+                    ...bS,
+                    background: "rgba(255,255,255,.05)",
+                    border: "1px solid rgba(255,255,255,.08)",
+                    color: "#DCD4EA",
+                    borderRadius: 999,
+                    padding: "9px 14px",
+                    fontSize: 11,
+                  }}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gap: 14 }}>
+            <div
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(30,26,40,.96), rgba(18,15,25,.98))",
+                border: "1px solid rgba(255,255,255,.08)",
+                borderRadius: mob ? 22 : 26,
+                padding: mob ? 18 : 22,
+                boxShadow: "0 12px 40px rgba(0,0,0,.22)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  marginBottom: 14,
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      letterSpacing: 2,
+                      textTransform: "uppercase",
+                      color: "#8A80A0",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Live plan preview
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontSize: mob ? 19 : 24,
+                    }}
+                  >
+                    Intentional, not overwhelming
+                  </div>
+                </div>
+                <div
+                  style={{
+                    padding: "7px 10px",
+                    borderRadius: 999,
+                    background: "rgba(0,201,167,.12)",
+                    color: "#9DF1E1",
+                    fontSize: 11,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  0.5m snap grid
+                </div>
+              </div>
+              <div
+                style={{
+                  background: "#0F0D15",
+                  borderRadius: 22,
+                  padding: 14,
+                  border: "1px solid rgba(255,255,255,.05)",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    height: mob ? 220 : 260,
+                    borderRadius: 18,
+                    overflow: "hidden",
+                    background:
+                      "linear-gradient(180deg, #FBF7EC 0%, #F3EEDC 100%)",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 18,
+                      border: "2px solid #3A3548",
+                      borderRadius: 14,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "12%",
+                      top: "16%",
+                      width: "34%",
+                      height: "34%",
+                      background: TYPES.living.c,
+                      border: "2px solid #3A3548",
+                      borderRadius: 10,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "14%",
+                      top: "16%",
+                      width: "26%",
+                      height: "22%",
+                      background: TYPES.kitchen.c,
+                      border: "2px solid #3A3548",
+                      borderRadius: 10,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "12%",
+                      bottom: "18%",
+                      width: "28%",
+                      height: "24%",
+                      background: TYPES.bedroom.c,
+                      border: "2px solid #3A3548",
+                      borderRadius: 10,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "14%",
+                      bottom: "18%",
+                      width: "22%",
+                      height: "24%",
+                      background: TYPES.bathroom.c,
+                      border: "2px solid #3A3548",
+                      borderRadius: 10,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "48%",
+                      top: "22%",
+                      width: "8%",
+                      height: "50%",
+                      background: TYPES.corridor.c,
+                      border: "2px solid #3A3548",
+                      borderRadius: 8,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "20%",
+                      top: "40%",
+                      width: 42,
+                      height: 4,
+                      borderRadius: 999,
+                      background: "#8B6914",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gap: 12 }}>
+              {featureCards.map((card, i) => (
+                <div
+                  key={card.title}
+                  className="fps-fade"
+                  style={{
+                    background: "rgba(20,17,28,.7)",
+                    border: "1px solid rgba(255,255,255,.07)",
+                    borderRadius: 18,
+                    padding: mob ? 16 : 18,
+                    animationDelay: `${0.08 + i * 0.06}s`,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 11,
+                      letterSpacing: 2,
+                      textTransform: "uppercase",
+                      color: "#00C9A7",
+                      marginBottom: 8,
+                    }}
+                  >
+                    Feature {i + 1}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontSize: 22,
+                      lineHeight: 1.15,
+                      marginBottom: 8,
+                    }}
+                  >
+                    {card.title}
+                  </div>
+                  <div style={{ fontSize: 13, color: "#B9B0CC", lineHeight: 1.7 }}>
+                    {card.body}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="fps-fade"
+          style={{
+            background: "rgba(17,14,24,.72)",
+            border: "1px solid rgba(255,255,255,.07)",
+            borderRadius: mob ? 24 : 28,
+            padding: mob ? 18 : 24,
+            boxShadow: "0 14px 46px rgba(0,0,0,.2)",
+            marginBottom: 22,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: mob ? "flex-start" : "center",
+              flexDirection: mob ? "column" : "row",
+              gap: 12,
+              marginBottom: 18,
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontSize: 11,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  color: "#8A80A0",
+                  marginBottom: 5,
+                }}
+              >
+                Workspace
+              </div>
+              <h2
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: mob ? 24 : 30,
+                  fontWeight: 400,
+                  marginBottom: 4,
+                }}
+              >
+                Your plans and project drafts
+              </h2>
+              <p style={{ fontSize: 14, color: "#AFA6C1", lineHeight: 1.7 }}>
+                Keep everything in one place, then open any project to continue
+                designing from where you left off.
+              </p>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                alignSelf: mob ? "stretch" : "center",
+              }}
+            >
+              <button
+                className="fps-btn"
+                onClick={() => setShowNew(true)}
+                style={{
+                  ...bS,
+                  background: "#845EC2",
+                  color: "#FFFFFF",
+                  borderRadius: 12,
+                  padding: mob ? "12px 18px" : "12px 20px",
+                }}
+              >
+                + New Project
+              </button>
+              <button
+                className="fps-btn"
+                onClick={onSupport}
+                style={{
+                  ...bS,
+                  background: "transparent",
+                  border: "1px solid rgba(255,255,255,.09)",
+                  color: "#D2CAE2",
+                  borderRadius: 12,
+                  padding: mob ? "12px 18px" : "12px 20px",
+                }}
+              >
+                Help Support the Project
+              </button>
+            </div>
+          </div>
+
+          {showNew && (
+            <div
+              className="fps-scale"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(132,94,194,.14), rgba(20,17,28,.94))",
+                border: "1px solid rgba(255,255,255,.08)",
+                borderRadius: 22,
+                padding: mob ? 16 : 22,
+                marginBottom: 20,
+              }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: mob
+                    ? "1fr"
+                    : "minmax(220px,.82fr) minmax(0,1.18fr)",
+                  gap: 18,
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      letterSpacing: 2,
+                      textTransform: "uppercase",
+                      color: "#00C9A7",
+                      marginBottom: 8,
+                    }}
+                  >
+                    New Project
+                  </div>
+                  <h3
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontSize: mob ? 22 : 28,
+                      fontWeight: 400,
+                      marginBottom: 8,
+                    }}
+                  >
+                    Start with a blank shell or a preset
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: 13,
+                      color: "#B9B0CC",
+                      lineHeight: 1.7,
+                      marginBottom: 14,
+                    }}
+                  >
+                    Define the plot size, pick your units, and jump straight
+                    into the editor.
+                  </p>
+                  <div style={{ display: "grid", gap: 8 }}>
+                    {presets.map((preset) => (
+                      <button
+                        key={preset.name + preset.units}
+                        className="fps-btn"
+                        onClick={() => applyPreset(preset)}
+                        style={{
+                          ...bS,
+                          background: "rgba(255,255,255,.04)",
+                          border: "1px solid rgba(255,255,255,.07)",
+                          color: "#E6DFF4",
+                          borderRadius: 14,
+                          padding: "12px 14px",
+                          textAlign: "left",
+                        }}
+                      >
+                        <div style={{ fontSize: 13, marginBottom: 3 }}>
+                          {preset.name}
+                        </div>
+                        <div style={{ fontSize: 11, color: "#948AA9" }}>
+                          {preset.note}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gap: 14 }}>
+                  <div>
+                    <div style={lS}>Project Name</div>
+                    <input
+                      className="fps-input"
+                      autoFocus
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Courtyard House"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") create();
+                      }}
+                      style={{ ...iS, padding: "13px 14px", borderRadius: 12 }}
+                    />
+                  </div>
+
+                  <div>
+                    <div style={lS}>Units</div>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 8,
+                      }}
+                    >
+                      {["metric", "imperial"].map((u) => (
+                        <button
+                          key={u}
+                          className="fps-btn"
+                          onClick={() => setUnits(u)}
+                          style={{
+                            ...bS,
+                            padding: "12px",
+                            fontSize: 12,
+                            background:
+                              units === u ? "#845EC2" : "rgba(255,255,255,.03)",
+                            color: units === u ? "#FFFFFF" : "#C9C1D9",
+                            border:
+                              units === u
+                                ? "1px solid #845EC2"
+                                : "1px solid rgba(255,255,255,.08)",
+                            borderRadius: 12,
+                          }}
+                        >
+                          {u === "metric" ? "Metric (m, cm)" : "Imperial (ft, in)"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: mob ? "1fr" : "1fr 1fr 1fr",
+                      gap: 10,
+                    }}
+                  >
+                    <div>
+                      <div style={lS}>
+                        {units === "imperial" ? "Width (ft)" : "Width (m)"}
+                      </div>
+                      <input
+                        className="fps-input"
+                        type="number"
+                        min={1}
+                        value={pw}
+                        onChange={(e) => setPw(Math.max(1, +e.target.value))}
+                        style={{ ...iS, padding: "13px 14px", borderRadius: 12 }}
+                      />
+                    </div>
+                    <div>
+                      <div style={lS}>
+                        {units === "imperial" ? "Height (ft)" : "Height (m)"}
+                      </div>
+                      <input
+                        className="fps-input"
+                        type="number"
+                        min={1}
+                        value={ph}
+                        onChange={(e) => setPh(Math.max(1, +e.target.value))}
+                        style={{ ...iS, padding: "13px 14px", borderRadius: 12 }}
+                      />
+                    </div>
+                    <div>
+                      <div style={lS}>
+                        {units === "imperial" ? "Wall (in)" : "Wall (cm)"}
+                      </div>
+                      <input
+                        className="fps-input"
+                        type="number"
+                        min={1}
+                        value={wtCm}
+                        onChange={(e) => setWtCm(Math.max(1, +e.target.value))}
+                        style={{ ...iS, padding: "13px 14px", borderRadius: 12 }}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: mob ? "1fr" : "1fr auto auto",
+                      gap: 10,
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: "rgba(15,13,22,.58)",
+                        border: "1px solid rgba(255,255,255,.06)",
+                        borderRadius: 14,
+                        padding: "12px 14px",
+                        color: "#D4CCE4",
+                        fontSize: 13,
+                      }}
+                    >
+                      {pw} x {ph} {units === "imperial" ? "ft" : "m"} · {areaLabel}
+                      {" · "}Walls {wtCm} {units === "imperial" ? "in" : "cm"}
+                    </div>
+                    <button
+                      className="fps-btn"
+                      onClick={create}
+                      style={{
+                        ...bS,
+                        background: "#00C9A7",
+                        color: "#0E1218",
+                        padding: "12px 20px",
+                        borderRadius: 12,
+                        fontSize: 14,
+                        fontWeight: 600,
+                      }}
+                    >
+                      Create Project
+                    </button>
+                    <button
+                      className="fps-btn"
+                      onClick={() => setShowNew(false)}
+                      style={{
+                        ...bS,
+                        background: "transparent",
+                        border: "1px solid rgba(255,255,255,.08)",
+                        color: "#8A80A0",
+                        padding: "12px 18px",
+                        borderRadius: 12,
+                        fontSize: 14,
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: mob ? 32 : 46,
+                color: "#8A80A0",
+                background: "rgba(255,255,255,.03)",
+                border: "1px dashed rgba(255,255,255,.08)",
+                borderRadius: 20,
+              }}
+            >
+              Loading projects...
+            </div>
+          ) : sortedProjects.length === 0 ? (
+            <div
+              className="fps-fade"
+              style={{
+                textAlign: "center",
+                padding: mob ? 30 : 52,
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015))",
+                border: "1px dashed rgba(255,255,255,.1)",
+                borderRadius: 22,
+              }}
+            >
+              <div
+                style={{
+                  width: 78,
+                  height: 78,
+                  borderRadius: 24,
+                  background: "rgba(132,94,194,.12)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 14px",
+                }}
+              >
+                <svg
+                  width="34"
+                  height="34"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#B99AF1"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 21h18" />
+                  <path d="M5 21V7l7-4l7 4v14" />
+                  <path d="M9 21v-6h6v6" />
+                </svg>
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: mob ? 24 : 30,
+                  marginBottom: 8,
+                }}
+              >
+                No plans yet
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  color: "#9B91B0",
+                  maxWidth: 460,
+                  margin: "0 auto 18px",
+                  lineHeight: 1.7,
+                }}
+              >
+                Start with an empty project or grab a preset above and shape
+                your first floor plan directly on the canvas.
+              </div>
+              <button
+                className="fps-btn"
+                onClick={() => setShowNew(true)}
+                style={{
+                  ...bS,
+                  background: "#845EC2",
+                  color: "#FFFFFF",
+                  padding: "13px 20px",
+                  borderRadius: 12,
+                  fontSize: 14,
+                }}
+              >
+                Create the First Project
+              </button>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: mob
+                  ? "1fr"
+                  : "repeat(auto-fill, minmax(300px, 1fr))",
+                gap: mob ? 12 : 16,
+              }}
+            >
+              {sortedProjects.map((p, i) => {
+                const pu = p.units || "metric";
+                const updated = p.updatedAt
+                  ? new Date(p.updatedAt).toLocaleDateString()
+                  : "Recently";
+                const plotLabel = `${dU(p.plotWidth || 0, pu)} x ${dU(p.plotHeight || 0, pu)}`;
+                const wallLabel = wD(
+                  Math.round((p.wallThickness || 0.2) * 100),
+                  pu,
+                );
+                const area = dA((p.plotWidth || 0) * (p.plotHeight || 0), pu);
+                return (
+                  <div
+                    key={p.id}
+                    className="fps-card fps-fade"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(30,26,40,.96), rgba(18,15,25,.98))",
+                      border: "1px solid rgba(255,255,255,.07)",
+                      borderRadius: 20,
+                      overflow: "hidden",
+                      cursor: "pointer",
+                      animationDelay: `${i * 0.05}s`,
+                      boxShadow: "0 12px 34px rgba(0,0,0,.18)",
+                    }}
+                    onClick={() => onOpen(p.id)}
+                  >
+                    <div style={{ padding: mob ? 16 : 18 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: 10,
+                          marginBottom: 14,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 11,
+                            letterSpacing: 1.6,
+                            textTransform: "uppercase",
+                            color: "#8A80A0",
+                          }}
+                        >
+                          Updated {updated}
+                        </div>
+                        <button
+                          className="fps-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm("Delete this project?")) onDelete(p.id);
+                          }}
+                          style={{
+                            ...bS,
+                            background: "transparent",
+                            border: "1px solid rgba(255,107,138,.18)",
+                            color: "#E48AA1",
+                            padding: "6px 10px",
+                            fontSize: 10,
+                            borderRadius: 999,
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "96px minmax(0,1fr)",
+                          gap: 14,
+                          alignItems: "center",
+                          marginBottom: 14,
+                        }}
+                      >
+                        <div
+                          style={{
+                            height: 96,
+                            borderRadius: 16,
+                            background:
+                              "linear-gradient(180deg, #FBF7EC 0%, #F1EBD8 100%)",
+                            border: "1px solid rgba(255,255,255,.07)",
+                            position: "relative",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 10,
+                              border: "2px solid #3A3548",
+                              borderRadius: 10,
+                            }}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: 18,
+                              top: 18,
+                              width: 24,
+                              height: 20,
+                              borderRadius: 6,
+                              background: TYPES.living.c,
+                              border: "2px solid #3A3548",
+                            }}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              right: 18,
+                              top: 18,
+                              width: 18,
+                              height: 18,
+                              borderRadius: 6,
+                              background: TYPES.kitchen.c,
+                              border: "2px solid #3A3548",
+                            }}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: 18,
+                              bottom: 18,
+                              width: 18,
+                              height: 18,
+                              borderRadius: 6,
+                              background: TYPES.bedroom.c,
+                              border: "2px solid #3A3548",
+                            }}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              right: 18,
+                              bottom: 18,
+                              width: 22,
+                              height: 18,
+                              borderRadius: 6,
+                              background: TYPES.corridor.c,
+                              border: "2px solid #3A3548",
+                            }}
+                          />
+                        </div>
+
+                        <div style={{ minWidth: 0 }}>
+                          <div
+                            style={{
+                              fontFamily: "'Playfair Display', serif",
+                              fontSize: 24,
+                              lineHeight: 1.1,
+                              marginBottom: 8,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {p.name}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 13,
+                              color: "#B6ADC8",
+                              lineHeight: 1.6,
+                            }}
+                          >
+                            {plotLabel}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 12,
+                              color: "#8A80A0",
+                              marginTop: 4,
+                            }}
+                          >
+                            Walls {wallLabel} · {pu === "imperial" ? "Imperial" : "Metric"}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+                          gap: 8,
+                        }}
+                      >
+                        {[
+                          { label: "Plot", value: plotLabel },
+                          { label: "Area", value: area },
+                          {
+                            label: "Format",
+                            value: pu === "imperial" ? "ft / in" : "m / cm",
+                          },
+                        ].map((meta) => (
+                          <div
+                            key={meta.label}
+                            style={{
+                              background: "rgba(255,255,255,.04)",
+                              border: "1px solid rgba(255,255,255,.06)",
+                              borderRadius: 14,
+                              padding: "10px 12px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: 10,
+                                color: "#8A80A0",
+                                textTransform: "uppercase",
+                                letterSpacing: 1.2,
+                                marginBottom: 4,
+                              }}
+                            >
+                              {meta.label}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: 12,
+                                color: "#F2EDFA",
+                                lineHeight: 1.4,
+                              }}
+                            >
+                              {meta.value}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div
+          className="fps-fade"
+          style={{
+            display: "grid",
+            gridTemplateColumns: mob ? "1fr" : "minmax(0,1fr) minmax(0,.92fr)",
+            gap: 14,
+          }}
+        >
+          <div
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(132,94,194,.22), rgba(20,17,28,.95))",
+              border: "1px solid rgba(255,255,255,.07)",
+              borderRadius: 22,
+              padding: mob ? 18 : 22,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                color: "#D5CAE9",
+                marginBottom: 8,
+              }}
+            >
+              Keep it open and free
+            </div>
+            <div
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: mob ? 24 : 30,
+                marginBottom: 8,
+                lineHeight: 1.15,
+              }}
+            >
+              Support development if the tool saves you time
+            </div>
+            <p
+              style={{
+                fontSize: 14,
+                color: "#C7BED9",
+                lineHeight: 1.7,
+                marginBottom: 16,
+              }}
+            >
+              Contributions help cover hosting, polish mobile editing, and keep
+              new features shipping without putting the core product behind a
+              subscription.
+            </p>
+            <button
+              className="fps-btn"
+              onClick={onSupport}
+              style={{
+                ...bS,
+                background: "#00C9A7",
+                color: "#0E1218",
+                padding: "13px 20px",
+                borderRadius: 12,
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              Visit Support Options
+            </button>
+          </div>
+
+          <div
+            style={{
+              background: "rgba(17,14,24,.74)",
+              border: "1px solid rgba(255,255,255,.07)",
+              borderRadius: 22,
+              padding: mob ? 18 : 22,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                color: "#8A80A0",
+                marginBottom: 8,
+              }}
+            >
+              Contact
+            </div>
+            <div
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: mob ? 22 : 28,
+                marginBottom: 8,
+              }}
+            >
+              Questions, feedback, or feature ideas
+            </div>
+            <p
+              style={{
+                fontSize: 14,
+                color: "#B8AFCB",
+                lineHeight: 1.7,
+                marginBottom: 16,
+              }}
+            >
+              Send notes directly if you want to report an issue, suggest
+              improvements, or talk about how the tool should evolve.
+            </p>
+            <a
+              href="mailto:contact@simpleplan.space"
+              className="fps-btn"
+              style={{
+                ...bS,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "transparent",
+                border: "1px solid rgba(255,255,255,.09)",
+                color: "#E0D9ED",
+                padding: "12px 18px",
+                fontSize: 13,
+                textDecoration: "none",
+                borderRadius: 12,
+              }}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M22 4L12 13L2 4" />
+              </svg>
+              contact@simpleplan.space
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SupportPage({ onBack }) {
+  const mob = useMob();
+  const [copied, setCopied] = useState(null);
+
+  useEffect(() => {
+    injectCSS();
+  }, []);
+
+  const supportActions = [
+    {
+      title: "Upvote the product",
+      body: "A quick vote helps more people discover the app.",
+      links: [
+        {
+          label: "Product Hunt",
+          href: "https://www.producthunt.com/products/simple-plan-space?utm_source=other&utm_medium=social",
+          tone: "solid",
+        },
+        {
+          label: "NextGen Tools",
+          href: "https://www.nxgntools.com/tools/simple-plan-space",
+          tone: "ghost",
+        },
+      ],
+    },
+    {
+      title: "Star and share it",
+      body: "GitHub stars and simple shares create trust and momentum.",
+      links: [
+        {
+          label: "Star on GitHub",
+          href: "https://github.com/Muhammed-Jameel/simple-plan-space",
+          tone: "ghost",
+        },
+      ],
+    },
+    {
+      title: "Send product feedback",
+      body: "Specific feedback is often more valuable than money early on.",
+      links: [
+        {
+          label: "Email Feedback",
+          href: "mailto:contact@simpleplan.space?subject=Feedback",
+          tone: "ghost",
+        },
+      ],
+    },
+  ];
+  const fundingItems = [
+    "Hosting and deployment costs",
+    "Mobile interaction polish and bug fixes",
+    "New editor tools, exports, and iteration time",
+  ];
+
+  const copy = async (name, addr) => {
+    try {
+      await navigator.clipboard.writeText(addr);
+    } catch {
+      const el = document.createElement("textarea");
+      el.value = addr;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+    setCopied(name);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "radial-gradient(circle at top left, rgba(132,94,194,.26), transparent 26%), radial-gradient(circle at top right, rgba(0,201,167,.1), transparent 20%), linear-gradient(180deg, #17141E 0%, #120F18 100%)",
+        color: "#FFFFFF",
+        fontFamily: "'Outfit', sans-serif",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: -110,
+          right: -70,
+          width: mob ? 220 : 320,
+          height: mob ? 220 : 320,
+          borderRadius: "50%",
+          background: "rgba(132,94,194,.14)",
+          filter: "blur(24px)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 90,
+          left: -100,
+          width: mob ? 240 : 360,
+          height: mob ? 240 : 360,
+          borderRadius: "50%",
+          background: "rgba(0,201,167,.08)",
+          filter: "blur(28px)",
+        }}
+      />
+
+      <div
+        style={{
+          maxWidth: 1180,
+          margin: "0 auto",
+          padding: mob ? "18px 14px 38px" : "28px 24px 46px",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            marginBottom: mob ? 18 : 20,
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            className="fps-btn"
+            onClick={onBack}
+            style={{
+              ...bS,
+              background: "rgba(18,16,26,.65)",
+              border: "1px solid rgba(255,255,255,.08)",
+              color: "#D4CCE5",
+              padding: mob ? "10px 14px" : "10px 18px",
+              borderRadius: 12,
+            }}
+          >
+            Back
+          </button>
+          <a
+            href="mailto:contact@simpleplan.space"
+            className="fps-btn"
+            style={{
+              ...bS,
+              background: "transparent",
+              border: "1px solid rgba(255,255,255,.08)",
+              color: "#CFC6DE",
+              textDecoration: "none",
+              padding: mob ? "10px 14px" : "10px 18px",
+              borderRadius: 12,
+            }}
+          >
+            Contact
+          </a>
+        </div>
+
+        <div
+          className="fps-fade"
+          style={{
+            display: "grid",
+            gridTemplateColumns: mob
+              ? "1fr"
+              : "minmax(0,1.06fr) minmax(320px,.94fr)",
+            gap: mob ? 16 : 18,
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(132,94,194,.22) 0%, rgba(30,26,40,.96) 46%, rgba(19,16,27,.98) 100%)",
+              border: "1px solid rgba(255,255,255,.08)",
+              borderRadius: mob ? 24 : 30,
+              padding: mob ? 20 : 30,
+              boxShadow: "0 16px 60px rgba(0,0,0,.24)",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "7px 12px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,.06)",
+                border: "1px solid rgba(255,255,255,.08)",
+                fontSize: 11,
+                letterSpacing: 1.5,
+                textTransform: "uppercase",
+                color: "#ECE4FA",
+                marginBottom: 18,
+              }}
+            >
+              Community-backed project
+            </div>
+            <h1
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: mob ? 34 : 56,
+                fontWeight: 400,
+                lineHeight: 1.06,
+                marginBottom: 14,
+                maxWidth: 680,
+              }}
+            >
+              Support Simple Plan
+              <span style={{ color: "#00C9A7" }}> Space</span> if it is useful
+            </h1>
+            <p
+              style={{
+                fontSize: mob ? 14 : 18,
+                color: "#C7BED9",
+                lineHeight: 1.7,
+                maxWidth: 640,
+                marginBottom: 22,
+              }}
+            >
+              The app is free and open source by design. Support helps keep it
+              online, fund better mobile editing, and make time for higher
+              quality planning features without turning the core experience into
+              a subscription product.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                marginBottom: 20,
+              }}
+            >
+              <a
+                href="https://github.com/Muhammed-Jameel/simple-plan-space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fps-btn"
+                style={{
+                  ...bS,
+                  background: "#00C9A7",
+                  color: "#0E1218",
+                  padding: "13px 18px",
+                  borderRadius: 12,
+                  textDecoration: "none",
+                  fontWeight: 600,
+                }}
+              >
+                Star the Project
+              </a>
+              <a
+                href="mailto:contact@simpleplan.space?subject=Feedback"
+                className="fps-btn"
+                style={{
+                  ...bS,
+                  background: "rgba(18,16,26,.6)",
+                  border: "1px solid rgba(255,255,255,.09)",
+                  color: "#E2DBEF",
+                  padding: "13px 18px",
+                  borderRadius: 12,
+                  textDecoration: "none",
+                }}
+              >
+                Send Feedback
+              </a>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {["Free forever", "Open source", "No ads in the editor"].map(
+                (item) => (
+                  <div
+                    key={item}
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: 999,
+                      background: "rgba(255,255,255,.05)",
+                      border: "1px solid rgba(255,255,255,.07)",
+                      color: "#D7D0E6",
+                      fontSize: 11,
+                    }}
+                  >
+                    {item}
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+
+          <div
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(30,26,40,.96), rgba(18,15,25,.98))",
+              border: "1px solid rgba(255,255,255,.08)",
+              borderRadius: mob ? 24 : 28,
+              padding: mob ? 20 : 24,
+              boxShadow: "0 12px 40px rgba(0,0,0,.22)",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                color: "#8A80A0",
+                marginBottom: 10,
+              }}
+            >
+              What support pays for
+            </div>
+            <div
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: mob ? 24 : 30,
+                lineHeight: 1.15,
+                marginBottom: 12,
+              }}
+            >
+              Focused improvements, not feature bloat
+            </div>
+            <div style={{ display: "grid", gap: 10, marginBottom: 16 }}>
+              {fundingItems.map((item, i) => (
+                <div
+                  key={item}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "30px minmax(0,1fr)",
+                    gap: 10,
+                    alignItems: "start",
+                    background: "rgba(255,255,255,.04)",
+                    border: "1px solid rgba(255,255,255,.06)",
+                    borderRadius: 16,
+                    padding: "12px 14px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 10,
+                      background:
+                        i === 1
+                          ? "rgba(0,201,167,.14)"
+                          : "rgba(132,94,194,.16)",
+                      color: i === 1 ? "#8DF0DE" : "#DBCFF3",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {i + 1}
+                  </div>
+                  <div style={{ fontSize: 14, color: "#EEE9F7", lineHeight: 1.6 }}>
+                    {item}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div
+              style={{
+                background: "rgba(0,201,167,.08)",
+                border: "1px solid rgba(0,201,167,.16)",
+                borderRadius: 16,
+                padding: "14px 16px",
+                color: "#C8FFF3",
+                fontSize: 13,
+                lineHeight: 1.6,
+              }}
+            >
+              If donating is not for you, using the app, sharing it, and
+              sending concrete feedback still moves the project forward.
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: mob
+              ? "1fr"
+              : "minmax(0,1.08fr) minmax(320px,.92fr)",
+            gap: mob ? 16 : 18,
+            alignItems: "start",
+          }}
+        >
+          <div style={{ width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                marginBottom: 16,
+                flexWrap: "wrap",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    color: "#8A80A0",
+                    marginBottom: 6,
+                  }}
+                >
+                  Crypto support
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: mob ? 24 : 32,
+                    lineHeight: 1.1,
+                  }}
+                >
+                  Wallets and QR codes
+                </div>
+              </div>
+              <div
+                style={{
+                  padding: "8px 12px",
+                  borderRadius: 999,
+                  background: "rgba(255,255,255,.05)",
+                  border: "1px solid rgba(255,255,255,.07)",
+                  fontSize: 11,
+                  color: "#D4CCE5",
+                }}
+              >
+                Double-check the network before sending
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gap: 14 }}>
+              {CRYPTO.map((c) => (
+                <div
+                  key={c.name}
+                  className="fps-card"
+                  style={{
+                    background: `linear-gradient(135deg, ${c.color}14 0%, rgba(30,26,40,.96) 44%, rgba(18,15,25,.98) 100%)`,
+                    border: `1px solid ${c.color}33`,
+                    borderRadius: 22,
+                    padding: mob ? 16 : 20,
+                    boxShadow: "0 12px 34px rgba(0,0,0,.18)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 10,
+                      marginBottom: 14,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div
+                        style={{
+                          width: 46,
+                          height: 46,
+                          borderRadius: 14,
+                          background: c.color + "20",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 20,
+                            fontWeight: 700,
+                            color: c.color,
+                          }}
+                        >
+                          {c.sym}
+                        </span>
+                      </div>
+                      <div>
+                        <div
+                          style={{
+                            fontFamily: "'Playfair Display', serif",
+                            fontSize: 24,
+                            lineHeight: 1.1,
+                            marginBottom: 3,
+                          }}
+                        >
+                          {c.name}
+                        </div>
+                        <div style={{ fontSize: 12, color: "#AAA0BE" }}>
+                          {c.net}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        background: "rgba(255,255,255,.05)",
+                        border: "1px solid rgba(255,255,255,.08)",
+                        color: "#EBE6F6",
+                        fontSize: 11,
+                      }}
+                    >
+                      Copy supported
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: mob ? "1fr" : "160px minmax(0,1fr)",
+                      gap: 16,
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        justifySelf: mob ? "center" : "stretch",
+                        background: "#0A0A0A",
+                        borderRadius: 16,
+                        padding: 8,
+                        border: "1px solid rgba(255,255,255,.06)",
+                      }}
+                    >
+                      <img
+                        src={c.qr}
+                        alt={c.name + " QR"}
+                        width="144"
+                        height="144"
+                        style={{ display: "block", borderRadius: 10 }}
+                      />
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: 10,
+                          color: "#8A80A0",
+                          marginBottom: 6,
+                          textTransform: "uppercase",
+                          letterSpacing: 1.4,
+                        }}
+                      >
+                        Wallet address
+                      </div>
+                      <div
+                        style={{
+                          background: "rgba(10,10,12,.4)",
+                          border: "1px solid rgba(255,255,255,.08)",
+                          borderRadius: 14,
+                          padding: "12px 14px",
+                          fontFamily: "monospace",
+                          fontSize: mob ? 10 : 12,
+                          color: "#E5DFF2",
+                          wordBreak: "break-all",
+                          lineHeight: 1.6,
+                          marginBottom: 10,
+                        }}
+                      >
+                        {c.addr}
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                        }}
+                      >
+                        <button
+                          className="fps-btn"
+                          onClick={() => copy(c.name, c.addr)}
+                          style={{
+                            ...bS,
+                            background:
+                              copied === c.name ? "#00C9A7" : "transparent",
+                            border:
+                              copied === c.name
+                                ? "1px solid #00C9A7"
+                                : "1px solid rgba(255,255,255,.08)",
+                            color:
+                              copied === c.name ? "#0E1218" : "#D7D0E6",
+                            padding: "11px 16px",
+                            borderRadius: 12,
+                            fontSize: 13,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {copied === c.name ? "Copied" : "Copy Address"}
+                        </button>
+                        <div style={{ fontSize: 12, color: "#A79EBA" }}>
+                          Send only on {c.net}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ width: "100%", display: "grid", gap: 14 }}>
+            <div
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(30,26,40,.96), rgba(18,15,25,.98))",
+                border: "1px solid rgba(255,255,255,.08)",
+                borderRadius: 22,
+                padding: mob ? 18 : 22,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  color: "#00C9A7",
+                  marginBottom: 8,
+                }}
+              >
+                Help without donating
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: mob ? 24 : 30,
+                  lineHeight: 1.15,
+                  marginBottom: 10,
+                }}
+              >
+                Other high-impact ways to support
+              </div>
+              <p
+                style={{
+                  fontSize: 14,
+                  color: "#B8AFCB",
+                  lineHeight: 1.7,
+                  marginBottom: 14,
+                }}
+              >
+                If you prefer not to donate, these actions still meaningfully
+                help the project grow.
+              </p>
+              <div style={{ display: "grid", gap: 12 }}>
+                {supportActions.map((section) => (
+                  <div
+                    key={section.title}
+                    style={{
+                      background: "rgba(255,255,255,.04)",
+                      border: "1px solid rgba(255,255,255,.06)",
+                      borderRadius: 16,
+                      padding: "14px 16px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 17,
+                        color: "#F5F1FD",
+                        marginBottom: 6,
+                      }}
+                    >
+                      {section.title}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 13,
+                        color: "#AFA6C1",
+                        lineHeight: 1.6,
+                        marginBottom: 12,
+                      }}
+                    >
+                      {section.body}
+                    </div>
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      {section.links.map((link) => (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          target={
+                            link.href.startsWith("mailto:") ? undefined : "_blank"
+                          }
+                          rel={
+                            link.href.startsWith("mailto:")
+                              ? undefined
+                              : "noopener noreferrer"
+                          }
+                          className="fps-btn"
+                          style={{
+                            ...bS,
+                            background:
+                              link.tone === "solid" ? "#DA5126" : "transparent",
+                            border:
+                              link.tone === "solid"
+                                ? "1px solid #DA5126"
+                                : "1px solid rgba(255,255,255,.08)",
+                            color: "#F7F4FC",
+                            textDecoration: "none",
+                            padding: "11px 14px",
+                            borderRadius: 12,
+                            fontSize: 12,
+                          }}
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(132,94,194,.18), rgba(20,17,28,.95))",
+                border: "1px solid rgba(255,255,255,.08)",
+                borderRadius: 22,
+                padding: mob ? 18 : 22,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  color: "#D7CDEF",
+                  marginBottom: 8,
+                }}
+              >
+                A small note
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: mob ? 24 : 28,
+                  lineHeight: 1.15,
+                  marginBottom: 10,
+                }}
+              >
+                Support should feel optional, not manipulative
+              </div>
+              <p
+                style={{
+                  fontSize: 14,
+                  color: "#C8BEDB",
+                  lineHeight: 1.8,
+                }}
+              >
+                The goal is to keep the editor genuinely usable for free. If the
+                app is helpful, great. If you also choose to support it, that
+                makes it easier to keep improving the product at a higher
+                standard.
+              </p>
             </div>
           </div>
         </div>
