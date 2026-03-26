@@ -2247,12 +2247,26 @@ function Editor({ project, onBack, st }) {
   );
   const TabBar = ({ s }) => (
     <div
-      style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5, ...s }}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 5,
+        position: "relative",
+        zIndex: 2,
+        pointerEvents: "auto",
+        ...s,
+      }}
     >
       {pTabs.map((t) => (
         <button
           key={t.k}
+          type="button"
           className="fps-tab fps-btn"
+          onPointerDown={(e) => {
+            e.stopPropagation();
+            setPan(t.k);
+            if (mob) setPanO(true);
+          }}
           onClick={() => {
             setPan(t.k);
             if (mob) setPanO(true);
@@ -2262,6 +2276,9 @@ function Editor({ project, onBack, st }) {
             padding: "9px 8px",
             fontSize: 11,
             textAlign: "center",
+            fontWeight: pan === t.k ? 600 : 500,
+            position: "relative",
+            zIndex: 1,
             ...(pan === t.k ? tA2 : {}),
           }}
         >
@@ -4410,7 +4427,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
                   <div
                     style={{
                       fontFamily: "'Playfair Display', serif",
-                      fontSize: mob ? 19 : 24,
+                      fontSize: mob ? 18 : 20,
                     }}
                   >
                     Intentional, not overwhelming
@@ -4557,7 +4574,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
                   <div
                     style={{
                       fontFamily: "'Playfair Display', serif",
-                      fontSize: 22,
+                      fontSize: 18,
                       lineHeight: 1.15,
                       marginBottom: 8,
                     }}
@@ -4609,7 +4626,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
               <h2
                 style={{
                   fontFamily: "'Playfair Display', serif",
-                  fontSize: mob ? 24 : 30,
+                  fontSize: mob ? 22 : 26,
                   fontWeight: 400,
                   marginBottom: 4,
                 }}
@@ -4695,7 +4712,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
                   <h3
                     style={{
                       fontFamily: "'Playfair Display', serif",
-                      fontSize: mob ? 22 : 28,
+                      fontSize: mob ? 20 : 22,
                       fontWeight: 400,
                       marginBottom: 8,
                     }}
@@ -4950,7 +4967,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
               <div
                 style={{
                   fontFamily: "'Playfair Display', serif",
-                  fontSize: mob ? 24 : 30,
+                  fontSize: mob ? 22 : 24,
                   marginBottom: 8,
                 }}
               >
@@ -5142,7 +5159,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
                           <div
                             style={{
                               fontFamily: "'Playfair Display', serif",
-                              fontSize: 24,
+                              fontSize: 20,
                               lineHeight: 1.1,
                               marginBottom: 8,
                               overflow: "hidden",
@@ -5259,7 +5276,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
             <div
               style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: mob ? 24 : 30,
+                fontSize: mob ? 22 : 24,
                 marginBottom: 8,
                 lineHeight: 1.15,
               }}
@@ -5317,7 +5334,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
             <div
               style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: mob ? 22 : 28,
+                fontSize: mob ? 20 : 22,
                 marginBottom: 8,
               }}
             >
@@ -5683,7 +5700,7 @@ function SupportPage({ onBack }) {
             <div
               style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: mob ? 24 : 30,
+                fontSize: mob ? 22 : 24,
                 lineHeight: 1.15,
                 marginBottom: 12,
               }}
@@ -5783,7 +5800,7 @@ function SupportPage({ onBack }) {
                 <div
                   style={{
                     fontFamily: "'Playfair Display', serif",
-                    fontSize: mob ? 24 : 32,
+                    fontSize: mob ? 22 : 24,
                     lineHeight: 1.1,
                   }}
                 >
@@ -5854,7 +5871,7 @@ function SupportPage({ onBack }) {
                         <div
                           style={{
                             fontFamily: "'Playfair Display', serif",
-                            fontSize: 24,
+                            fontSize: 20,
                             lineHeight: 1.1,
                             marginBottom: 3,
                           }}
@@ -5997,7 +6014,7 @@ function SupportPage({ onBack }) {
               <div
                 style={{
                   fontFamily: "'Playfair Display', serif",
-                  fontSize: mob ? 24 : 30,
+                  fontSize: mob ? 22 : 24,
                   lineHeight: 1.15,
                   marginBottom: 10,
                 }}
@@ -6028,7 +6045,7 @@ function SupportPage({ onBack }) {
                   >
                     <div
                       style={{
-                        fontSize: 17,
+                        fontSize: 15,
                         color: "#F5F1FD",
                         marginBottom: 6,
                       }}
@@ -6106,7 +6123,7 @@ function SupportPage({ onBack }) {
               <div
                 style={{
                   fontFamily: "'Playfair Display', serif",
-                  fontSize: mob ? 24 : 28,
+                  fontSize: mob ? 20 : 22,
                   lineHeight: 1.15,
                   marginBottom: 10,
                 }}
