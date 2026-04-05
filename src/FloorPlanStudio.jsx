@@ -894,7 +894,6 @@ function Editor({ project, onBack, st }) {
   const handleUiPointerDownCapture = useCallback(
     (e) => {
       clearUiDragState(e);
-      e.stopPropagation();
     },
     [clearUiDragState],
   );
