@@ -28,6 +28,54 @@ const WT = {
   small: { l: "Small", w: 0.6 },
   floor: { l: "Floor-to-ceiling", w: 1.5 },
 };
+const FURN = {
+  sofa: { l: "Sofa", c: "#D9B8A0", w: 2.2, h: 0.9, s: "SOFA" },
+  bed: { l: "Bed", c: "#D7DDEB", w: 2, h: 1.6, s: "BED" },
+  table: { l: "Dining Table", c: "#D9C8A5", w: 1.8, h: 1, s: "TABLE" },
+  desk: { l: "Desk", c: "#CBB8DE", w: 1.4, h: 0.7, s: "DESK" },
+  wardrobe: { l: "Wardrobe", c: "#C8B9AE", w: 1.8, h: 0.7, s: "WARD" },
+  counter: { l: "Kitchen Counter", c: "#D7C7B1", w: 2.4, h: 0.7, s: "COUNTER" },
+  toilet: { l: "Toilet", c: "#CFE7EA", w: 0.8, h: 1.2, s: "WC" },
+  shower: { l: "Shower", c: "#D6EFF3", w: 1, h: 1, s: "SHWR" },
+};
+const PROJECT_TEMPLATES = [
+  {
+    id: "blank",
+    name: "Blank Canvas",
+    note: "Empty project with just the plot",
+    pw: 24,
+    ph: 25,
+    wt: 20,
+    units: "metric",
+  },
+  {
+    id: "compact-family",
+    name: "Compact Family Home",
+    note: "Efficient starter layout with furniture",
+    pw: 14,
+    ph: 18,
+    wt: 20,
+    units: "metric",
+  },
+  {
+    id: "courtyard-villa",
+    name: "Courtyard Villa",
+    note: "Rooms wrapped around a central courtyard",
+    pw: 24,
+    ph: 28,
+    wt: 25,
+    units: "metric",
+  },
+  {
+    id: "townhouse-shell",
+    name: "Townhouse Shell",
+    note: "Two-floor starter shell with stacked stairs",
+    pw: 36,
+    ph: 54,
+    wt: 8,
+    units: "imperial",
+  },
+];
 
 const SNAP = 0.5,
   PAD = 36,
@@ -37,6 +85,128 @@ const snpM = (v) => Math.round(v / SNAP) * SNAP,
   snpF = (v) => Math.round(v * 10) / 10;
 const uid = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const cloneProject = (v) => JSON.parse(JSON.stringify(v));
+const getTemplate = (id) =>
+  PROJECT_TEMPLATES.find((tpl) => tpl.id === id) || PROJECT_TEMPLATES[0];
+const makeBlankFloor = (name = "Ground Floor", height = 3) => ({
+  id: uid(),
+  name,
+  rooms: [],
+  elements: [],
+  columns: [],
+  height,
+});
+const makeRoom = (name, type, x, y, w, h) => ({
+  id: uid(),
+  name,
+  type,
+  x: Math.max(0, snpM(x)),
+  y: Math.max(0, snpM(y)),
+  w: Math.max(1, snpM(w)),
+  h: Math.max(1, snpM(h)),
+});
+const makeFurniture = (kind, x, y, overrides = {}) => {
+  const meta = FURN[kind] || FURN.sofa;
+  return {
+    id: uid(),
+    type: "furniture",
+    kind,
+    x: Math.max(0, snpF(x)),
+    y: Math.max(0, snpF(y)),
+    w: overrides.w != null ? overrides.w : meta.w,
+    h: overrides.h != null ? overrides.h : meta.h,
+  };
+};
+function buildTemplateFloors(templateId, pw, ph) {
+  const compactRooms = [
+    makeRoom("Entry", "entry", 0, 0, pw * 0.24, ph * 0.16),
+    makeRoom("Living", "living", 0, ph * 0.16, pw * 0.5, ph * 0.34),
+    makeRoom("Kitchen", "kitchen", pw * 0.5, ph * 0.16, pw * 0.24, ph * 0.2),
+    makeRoom("Dining", "dining", pw * 0.5, ph * 0.36, pw * 0.24, ph * 0.14),
+    makeRoom("Bedroom", "bedroom", 0, ph * 0.5, pw * 0.38, ph * 0.24),
+    makeRoom("Bathroom", "bathroom", pw * 0.38, ph * 0.5, pw * 0.18, ph * 0.14),
+    makeRoom("Utility", "utility", pw * 0.56, ph * 0.5, pw * 0.18, ph * 0.14),
+    makeRoom("Courtyard", "courtyard", pw * 0.74, ph * 0.18, pw * 0.18, ph * 0.46),
+  ];
+  const compactElements = [
+    makeFurniture("sofa", compactRooms[1].x + 0.5, compactRooms[1].y + 0.6),
+    makeFurniture("table", compactRooms[3].x + 0.4, compactRooms[3].y + 0.4),
+    makeFurniture("counter", compactRooms[2].x + 0.3, compactRooms[2].y + 0.4),
+    makeFurniture("bed", compactRooms[4].x + 0.4, compactRooms[4].y + 0.5),
+    makeFurniture("toilet", compactRooms[5].x + 0.4, compactRooms[5].y + 0.3),
+  ];
+  const villaRooms = [
+    makeRoom("Entry", "entry", pw * 0.34, 0, pw * 0.18, ph * 0.14),
+    makeRoom("Living Majlis", "living", 0, ph * 0.14, pw * 0.28, ph * 0.28),
+    makeRoom("Family Living", "living", pw * 0.72, ph * 0.14, pw * 0.28, ph * 0.28),
+    makeRoom("Dining", "dining", 0, ph * 0.42, pw * 0.28, ph * 0.18),
+    makeRoom("Kitchen", "kitchen", pw * 0.72, ph * 0.42, pw * 0.28, ph * 0.18),
+    makeRoom("Bedroom 1", "bedroom", 0, ph * 0.6, pw * 0.28, ph * 0.24),
+    makeRoom("Bedroom 2", "bedroom", pw * 0.72, ph * 0.6, pw * 0.28, ph * 0.24),
+    makeRoom("Bathroom", "bathroom", pw * 0.32, ph * 0.72, pw * 0.14, ph * 0.12),
+    makeRoom("Courtyard", "courtyard", pw * 0.32, ph * 0.2, pw * 0.36, ph * 0.44),
+    makeRoom("Corridor", "corridor", pw * 0.28, ph * 0.14, pw * 0.44, ph * 0.06),
+  ];
+  const villaElements = [
+    makeFurniture("sofa", villaRooms[1].x + 0.8, villaRooms[1].y + 0.8),
+    makeFurniture("sofa", villaRooms[2].x + 0.8, villaRooms[2].y + 0.8),
+    makeFurniture("table", villaRooms[3].x + 0.7, villaRooms[3].y + 0.5),
+    makeFurniture("counter", villaRooms[4].x + 0.6, villaRooms[4].y + 0.4),
+    makeFurniture("bed", villaRooms[5].x + 0.7, villaRooms[5].y + 0.8),
+    makeFurniture("bed", villaRooms[6].x + 0.7, villaRooms[6].y + 0.8),
+  ];
+  if (templateId === "compact-family") {
+    return [{ ...makeBlankFloor("Ground Floor"), rooms: compactRooms, elements: compactElements }];
+  }
+  if (templateId === "courtyard-villa") {
+    return [{ ...makeBlankFloor("Ground Floor"), rooms: villaRooms, elements: villaElements }];
+  }
+  if (templateId === "townhouse-shell") {
+    const groundStairs = makeRoom("Stairs", "stairs", pw * 0.68, ph * 0.38, pw * 0.16, ph * 0.18);
+    return [
+      {
+        ...makeBlankFloor("Ground Floor"),
+        rooms: [
+          makeRoom("Entry", "entry", 0, 0, pw * 0.22, ph * 0.12),
+          makeRoom("Living", "living", 0, ph * 0.12, pw * 0.52, ph * 0.3),
+          makeRoom("Dining", "dining", 0, ph * 0.42, pw * 0.32, ph * 0.16),
+          makeRoom("Kitchen", "kitchen", pw * 0.52, ph * 0.12, pw * 0.32, ph * 0.22),
+          groundStairs,
+          makeRoom("Bathroom", "bathroom", pw * 0.52, ph * 0.34, pw * 0.16, ph * 0.12),
+          makeRoom("Utility", "utility", pw * 0.52, ph * 0.46, pw * 0.16, ph * 0.12),
+        ],
+        elements: [
+          makeFurniture("sofa", 0.8, ph * 0.16),
+          makeFurniture("table", 0.8, ph * 0.46),
+          makeFurniture("counter", pw * 0.54, ph * 0.16),
+        ],
+      },
+      {
+        ...makeBlankFloor("Upper Floor"),
+        rooms: [
+          makeRoom("Bedroom 1", "bedroom", 0, ph * 0.12, pw * 0.42, ph * 0.28),
+          makeRoom("Bedroom 2", "bedroom", 0, ph * 0.4, pw * 0.42, ph * 0.22),
+          makeRoom("Bedroom 3", "bedroom", pw * 0.42, ph * 0.12, pw * 0.26, ph * 0.22),
+          makeRoom("Bathroom", "bathroom", pw * 0.42, ph * 0.34, pw * 0.16, ph * 0.12),
+          makeRoom("Corridor", "corridor", pw * 0.58, ph * 0.12, pw * 0.1, ph * 0.46),
+          makeRoom("Stairs", "stairs", groundStairs.x, groundStairs.y, groundStairs.w, groundStairs.h),
+        ],
+        elements: [
+          makeFurniture("bed", 0.6, ph * 0.14),
+          makeFurniture("bed", 0.6, ph * 0.44),
+          makeFurniture("bed", pw * 0.44, ph * 0.14),
+          makeFurniture("wardrobe", pw * 0.18, ph * 0.14),
+        ],
+      },
+    ];
+  }
+  return [makeBlankFloor("Ground Floor")];
+}
+const serializeSnapshotProject = (project) => {
+  const next = cloneProject(project);
+  delete next.snapshots;
+  return next;
+};
 const useMob = () => {
   const [m, s] = useState(
     typeof window !== "undefined" ? window.innerWidth < 768 : false,
@@ -750,6 +920,74 @@ function WinSVG({ el, sc, sel, onPD, wp }) {
   );
 }
 
+function FurnitureSVG({ el, sc, sel, onPD }) {
+  const meta = FURN[el.kind] || FURN.sofa;
+  const x = PAD + el.x * sc,
+    y = PAD + el.y * sc,
+    w = Math.max((el.w || meta.w) * sc, 10),
+    h = Math.max((el.h || meta.h) * sc, 10);
+  const compact = w < 34 || h < 24;
+  return (
+    <g
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        onPD(e, el.id);
+      }}
+      style={{ cursor: "move", touchAction: "none" }}
+    >
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={Math.min(8, Math.max(3, Math.min(w, h) * 0.14))}
+        fill={meta.c}
+        opacity={0.95}
+        stroke={sel ? "#00C9A7" : "#5B536B"}
+        strokeWidth={sel ? 2 : 1}
+      />
+      <rect
+        x={x + 3}
+        y={y + 3}
+        width={Math.max(w - 6, 0)}
+        height={Math.max(h - 6, 0)}
+        rx={Math.min(6, Math.max(2, Math.min(w, h) * 0.1))}
+        fill="none"
+        stroke="rgba(58,53,72,.35)"
+        strokeWidth={1}
+        pointerEvents="none"
+      />
+      {!compact && (
+        <text
+          x={x + w / 2}
+          y={y + h / 2 - 2}
+          textAnchor="middle"
+          fontFamily="Outfit"
+          fontSize={Math.min(7, Math.max(4.8, w / 8))}
+          fill="#3A3548"
+          fontWeight="600"
+          pointerEvents="none"
+        >
+          {meta.s}
+        </text>
+      )}
+      {!compact && (
+        <text
+          x={x + w / 2}
+          y={y + h / 2 + 6}
+          textAnchor="middle"
+          fontFamily="Outfit"
+          fontSize={Math.min(5.2, Math.max(3.6, w / 10))}
+          fill="#5B536B"
+          pointerEvents="none"
+        >
+          {meta.l}
+        </text>
+      )}
+    </g>
+  );
+}
+
 // ── Editor ──
 function Editor({ project, onBack, st }) {
   const {
@@ -768,6 +1006,7 @@ function Editor({ project, onBack, st }) {
   const [panO, setPanO] = useState(false);
   const [showAF, setShowAF] = useState(false);
   const [nfn, setNfn] = useState("");
+  const [furnK, setFurnK] = useState("sofa");
   const [guides, setGuides] = useState([]);
   const [dragPos, setDragPos] = useState(null);
   const svgR = useRef(null);
@@ -785,6 +1024,7 @@ function Editor({ project, onBack, st }) {
   const fl = proj.floors[fIdx] || proj.floors[0];
   const rms = fl?.rooms || [];
   const els = fl?.elements || [];
+  const snaps = proj.snapshots || [];
   const pw = proj.plotWidth,
     ph = proj.plotHeight,
     wt = proj.wallThickness || 0.2,
@@ -820,13 +1060,14 @@ function Editor({ project, onBack, st }) {
   );
   const upd = useCallback(
     (fn) => {
-      const n = JSON.parse(JSON.stringify(proj));
+      const n = cloneProject(proj);
       fn(n);
       n.floors.forEach((f) => {
         if (!f.elements) f.elements = [];
         if (!f.columns) f.columns = [];
         if (f.height == null) f.height = 3;
       });
+      if (!n.snapshots) n.snapshots = [];
       autoSave(n);
       pushH(n);
     },
@@ -896,6 +1137,25 @@ function Editor({ project, onBack, st }) {
       clearUiDragState(e);
     },
     [clearUiDragState],
+  );
+  const replaceProj = useCallback(
+    (next) => {
+      const n = cloneProject(next);
+      n.floors.forEach((f) => {
+        if (!f.elements) f.elements = [];
+        if (!f.columns) f.columns = [];
+        if (f.height == null) f.height = 3;
+      });
+      if (!n.snapshots) n.snapshots = [];
+      autoSave(n);
+      pushH(n);
+      setFIdx((curr) => Math.max(0, Math.min(curr, n.floors.length - 1)));
+      setSelId(null);
+      setSelCat("room");
+      setPan("props");
+      resetDrag();
+    },
+    [autoSave, pushH, resetDrag],
   );
   const sRoom = selCat === "room" ? rms.find((r) => r.id === selId) : null;
   const sEl = selCat === "element" ? els.find((e) => e.id === selId) : null;
@@ -1030,6 +1290,9 @@ function Editor({ project, onBack, st }) {
         if (el.type === "column") {
           nx = snpF(Math.max(0, Math.min(pw, sr.x + dx)));
           ny = snpF(Math.max(0, Math.min(ph, sr.y + dy)));
+        } else if (el.type === "furniture") {
+          nx = snpF(Math.max(0, Math.min(pw - (el.w || 1), sr.x + dx)));
+          ny = snpF(Math.max(0, Math.min(ph - (el.h || 1), sr.y + dy)));
         } else if (el.orient === "h") {
           nx = snpF(Math.max(0, Math.min(pw - (el.width || 1), sr.x + dx)));
           ny = snpF(Math.max(0, Math.min(ph, sr.y + dy)));
@@ -1162,6 +1425,20 @@ function Editor({ project, onBack, st }) {
       selElFull(id);
       return;
     }
+    if (tool === "furniture") {
+      if (mx < 0 || my < 0 || mx > pw || my > ph) return;
+      const meta = FURN[furnK] || FURN.sofa;
+      const ne = makeFurniture(
+        furnK,
+        Math.max(0, Math.min(pw - meta.w, mx - meta.w / 2)),
+        Math.max(0, Math.min(ph - meta.h, my - meta.h / 2)),
+      );
+      upd((p) => {
+        p.floors[fIdx].elements.push(ne);
+      });
+      selElFull(ne.id);
+      return;
+    }
     // In select mode, touching background starts canvas pan
     clr();
     if (mob) setPanO(false);
@@ -1227,6 +1504,37 @@ function Editor({ project, onBack, st }) {
         );
       });
     clr();
+  };
+  const saveSnapshot = () => {
+    const now = new Date().toISOString();
+    const stamp = new Date(now).toLocaleString([], {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    const source = serializeSnapshotProject(proj);
+    upd((p) => {
+      p.snapshots = [
+        {
+          id: uid(),
+          name: `${p.name || "Project"} ${stamp}`,
+          createdAt: now,
+          project: source,
+        },
+        ...(p.snapshots || []),
+      ].slice(0, 12);
+    });
+  };
+  const restoreSnapshot = (snapshotId) => {
+    const snap = snaps.find((entry) => entry.id === snapshotId);
+    if (!snap?.project) return;
+    replaceProj({ ...cloneProject(snap.project), snapshots: snaps });
+  };
+  const removeSnapshot = (snapshotId) => {
+    upd((p) => {
+      p.snapshots = (p.snapshots || []).filter((entry) => entry.id !== snapshotId);
+    });
   };
   const addFl = () => {
     const nm = nfn.trim() || "Floor " + (proj.floors.length + 1);
@@ -1432,6 +1740,117 @@ function Editor({ project, onBack, st }) {
                   style={{ ...iS, padding: "6px", textAlign: "center" }}
                 />
               </div>
+            </div>
+            <button
+              type="button"
+              className="fps-btn"
+              onClick={delSel}
+              style={{
+                ...bS,
+                width: "100%",
+                background: "#4A2848",
+                color: "#E0C0F0",
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        );
+      }
+      if (sEl.type === "furniture") {
+        const meta = FURN[sEl.kind] || FURN.sofa;
+        return (
+          <div className="fps-fade">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                marginBottom: 8,
+              }}
+            >
+              <span style={{ fontSize: 16, color: "#845EC2", fontWeight: 600 }}>
+                Furniture
+              </span>
+              <div style={{ flex: 1 }} />
+              <span style={{ fontSize: 13, color: "#8A80A0" }}>
+                {meta.l}
+              </span>
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <div style={lS}>Item</div>
+              <select
+                className="fps-input"
+                value={sEl.kind}
+                onChange={(e) =>
+                  upd((p) => {
+                    const el = p.floors[fIdx].elements.find((x) => x.id === selId);
+                    if (!el) return;
+                    const next = FURN[e.target.value] || FURN.sofa;
+                    el.kind = e.target.value;
+                    el.w = next.w;
+                    el.h = next.h;
+                    el.x = Math.min(el.x, Math.max(0, pw - next.w));
+                    el.y = Math.min(el.y, Math.max(0, ph - next.h));
+                  })
+                }
+                style={iS}
+              >
+                {Object.entries(FURN).map(([k, v]) => (
+                  <option key={k} value={k}>
+                    {v.l}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                gap: 6,
+                marginBottom: 8,
+              }}
+            >
+              {[
+                ["X", sEl.x, (v) => ({ x: Math.max(0, Math.min(pw - sEl.w, v)) })],
+                ["Y", sEl.y, (v) => ({ y: Math.max(0, Math.min(ph - sEl.h, v)) })],
+                ["W", sEl.w, (v) => ({ w: Math.max(0.4, Math.min(pw, v)) })],
+                ["H", sEl.h, (v) => ({ h: Math.max(0.4, Math.min(ph, v)) })],
+              ].map(([label, val, fn]) => (
+                <div key={label}>
+                  <div style={lS}>{label}</div>
+                  <NumInput
+                    step={0.1}
+                    min={label === "X" || label === "Y" ? 0 : 0.4}
+                    value={val}
+                    onChange={(v) =>
+                      upd((p) => {
+                        const el = p.floors[fIdx].elements.find((x) => x.id === selId);
+                        if (!el) return;
+                        Object.assign(el, fn(v));
+                        el.x = Math.max(0, Math.min(pw - el.w, el.x));
+                        el.y = Math.max(0, Math.min(ph - el.h, el.y));
+                      })
+                    }
+                    style={{ ...iS, padding: "6px", textAlign: "center" }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div
+              style={{
+                background: "rgba(255,255,255,.03)",
+                border: "1px solid rgba(255,255,255,.06)",
+                borderRadius: 10,
+                padding: "10px 12px",
+                fontSize: 12,
+                color: "#AFA6C1",
+                lineHeight: 1.6,
+                marginBottom: 8,
+              }}
+            >
+              Furniture pieces are movable fixtures. Use them to test circulation,
+              bed fit, dining layouts, and storage before exporting the plan.
             </div>
             <button
               type="button"
@@ -1740,6 +2159,81 @@ function Editor({ project, onBack, st }) {
         </div>
       );
     }
+    if (tool === "furniture") {
+      return (
+        <div className="fps-fade">
+          <div
+            style={{
+              fontSize: 16,
+              color: "#845EC2",
+              fontWeight: 600,
+              marginBottom: 8,
+            }}
+          >
+            Furniture Library
+          </div>
+          <div
+            style={{
+              fontSize: 13,
+              color: "#AFA6C1",
+              lineHeight: 1.7,
+              marginBottom: 12,
+            }}
+          >
+            Choose a fixture, then tap on the plan to place it. Furniture is
+            movable and helps test circulation and fit.
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 8,
+              marginBottom: 12,
+            }}
+          >
+            {Object.entries(FURN).map(([k, item]) => (
+              <button
+                key={k}
+                type="button"
+                className="fps-btn"
+                onClick={() => setFurnK(k)}
+                style={{
+                  ...bS,
+                  background:
+                    furnK === k ? "rgba(132,94,194,.24)" : "rgba(255,255,255,.03)",
+                  border:
+                    furnK === k
+                      ? "1px solid rgba(132,94,194,.5)"
+                      : "1px solid rgba(255,255,255,.07)",
+                  color: "#E5DEF3",
+                  borderRadius: 12,
+                  padding: "12px",
+                  textAlign: "left",
+                }}
+              >
+                <div style={{ fontSize: 13, marginBottom: 4 }}>{item.l}</div>
+                <div style={{ fontSize: 11, color: "#8F85A4" }}>
+                  {item.w}m x {item.h}m
+                </div>
+              </button>
+            ))}
+          </div>
+          <div
+            style={{
+              background: "rgba(255,255,255,.03)",
+              border: "1px solid rgba(255,255,255,.06)",
+              borderRadius: 12,
+              padding: "10px 12px",
+              fontSize: 12,
+              color: "#9F95B6",
+              lineHeight: 1.6,
+            }}
+          >
+            Selected: {(FURN[furnK] || FURN.sofa).l}. Tap on the plan to place.
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         style={{
@@ -1841,7 +2335,7 @@ function Editor({ project, onBack, st }) {
               marginBottom: 3,
             }}
           >
-            Doors, Windows, Columns ({els.length})
+            Openings, Fixtures, Columns ({els.length})
           </div>
           <div
             style={{
@@ -1884,17 +2378,27 @@ function Editor({ project, onBack, st }) {
                         ? "#8B6914"
                         : el.type === "column"
                           ? "#6A5A48"
-                          : "#5AA0C0",
+                          : el.type === "furniture"
+                            ? "#845EC2"
+                            : "#5AA0C0",
                     width: 14,
                   }}
                 >
-                  {el.type === "door" ? "D" : el.type === "column" ? "C" : "W"}
+                  {el.type === "door"
+                    ? "D"
+                    : el.type === "column"
+                      ? "C"
+                      : el.type === "furniture"
+                        ? "F"
+                        : "W"}
                 </span>
                 <div style={{ flex: 1 }}>
                   {el.type === "door"
                     ? DT[el.doorType]?.l || "Door"
                     : el.type === "column"
                       ? "Column " + (el.size || 0.3) + "m"
+                      : el.type === "furniture"
+                        ? FURN[el.kind]?.l || "Furniture"
                       : WT[el.winType]?.l || "Window"}
                 </div>
               </div>
@@ -2224,6 +2728,105 @@ function Editor({ project, onBack, st }) {
             marginBottom: 6,
           }}
         >
+          Snapshots
+        </div>
+        <div style={{ marginBottom: 10 }}>
+          <button
+            type="button"
+            className="fps-btn"
+            onClick={saveSnapshot}
+            style={{
+              ...bS,
+              width: "100%",
+              background: "rgba(132,94,194,.16)",
+              border: "1px solid rgba(132,94,194,.36)",
+              color: "#F0E9FD",
+              marginBottom: 8,
+            }}
+          >
+            Save Current Snapshot
+          </button>
+          {snaps.length ? (
+            <div style={{ display: "grid", gap: 6 }}>
+              {snaps.slice(0, 5).map((snap) => (
+                <div
+                  key={snap.id}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto auto",
+                    gap: 6,
+                    alignItems: "center",
+                    background: "rgba(255,255,255,.03)",
+                    border: "1px solid rgba(255,255,255,.06)",
+                    borderRadius: 12,
+                    padding: "8px 10px",
+                  }}
+                >
+                  <div style={{ minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: "#E8E1F5",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        marginBottom: 2,
+                      }}
+                    >
+                      {snap.name}
+                    </div>
+                    <div style={{ fontSize: 10, color: "#8A80A0" }}>
+                      {new Date(snap.createdAt).toLocaleString()}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="fps-btn"
+                    onClick={() => restoreSnapshot(snap.id)}
+                    style={{
+                      ...bS,
+                      padding: "8px 10px",
+                      fontSize: 10,
+                      background: "#00C9A7",
+                      color: "#0E1218",
+                    }}
+                  >
+                    Restore
+                  </button>
+                  <button
+                    type="button"
+                    className="fps-btn"
+                    onClick={() => removeSnapshot(snap.id)}
+                    style={{
+                      ...bS,
+                      padding: "8px 10px",
+                      fontSize: 10,
+                      background: "transparent",
+                      border: "1px solid #3A3548",
+                      color: "#B0A8C4",
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ fontSize: 11, color: "#8A80A0", lineHeight: 1.6 }}>
+              Save named checkpoints before trying a major layout change.
+            </div>
+          )}
+        </div>
+        <div
+          style={{
+            fontSize: 11,
+            color: "#845EC2",
+            fontWeight: 500,
+            borderBottom: "1px solid #2A2538",
+            paddingBottom: 3,
+            marginBottom: 6,
+          }}
+        >
           Legend
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 10px" }}>
@@ -2259,6 +2862,7 @@ function Editor({ project, onBack, st }) {
     { k: "door", l: "Door" },
     { k: "window", l: "Window" },
     { k: "column", l: "Column" },
+    { k: "furniture", l: "Furniture" },
   ];
 
   const PanelContent = () => (
@@ -2413,6 +3017,7 @@ function Editor({ project, onBack, st }) {
         style={{
           display: "flex",
           alignItems: "center",
+          flexWrap: "wrap",
           padding: mob ? "4px 8px" : "6px 16px",
           borderBottom: "1px solid #2A2538",
           gap: 3,
@@ -2772,6 +3377,14 @@ function Editor({ project, onBack, st }) {
                 />
               ) : el.type === "column" ? (
                 <ColSVG
+                  key={el.id}
+                  el={dp}
+                  sc={sc}
+                  sel={el.id === selId && selCat === "element"}
+                  onPD={onED}
+                />
+              ) : el.type === "furniture" ? (
+                <FurnitureSVG
                   key={el.id}
                   el={dp}
                   sc={sc}
@@ -4041,6 +4654,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
   const [ph, setPh] = useState(25);
   const [wtCm, setWtCm] = useState(20);
   const [units, setUnits] = useState("metric");
+  const [templateId, setTemplateId] = useState("blank");
   const mob = useMob();
 
   useEffect(() => {
@@ -4052,42 +4666,20 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
       name: name.trim() || "Untitled House",
       plotWidth: pw,
       plotHeight: ph,
-      wallThickness: wtCm / 100,
+      wallThickness: units === "imperial" ? wtCm : wtCm / 100,
       units,
+      templateId,
     });
     setShowNew(false);
     setName("");
     setPw(24);
     setPh(25);
     setWtCm(20);
+    setUnits("metric");
+    setTemplateId("blank");
   };
 
-  const presets = [
-    {
-      name: "Compact Family Home",
-      note: "Efficient starter layout",
-      pw: 14,
-      ph: 18,
-      wt: 20,
-      units: "metric",
-    },
-    {
-      name: "Courtyard Villa",
-      note: "Roomier plot with a central void",
-      pw: 24,
-      ph: 28,
-      wt: 25,
-      units: "metric",
-    },
-    {
-      name: "Townhouse Shell",
-      note: "Imperial preset for quick testing",
-      pw: 36,
-      ph: 54,
-      wt: 8,
-      units: "imperial",
-    },
-  ];
+  const presets = PROJECT_TEMPLATES;
   const heroStats = [
     { value: "Free", label: "No paywall" },
     { value: "Multi-floor", label: "Stacked planning" },
@@ -4117,6 +4709,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
       new Date(a.updatedAt || a.createdAt || 0),
   );
   const applyPreset = (preset) => {
+    setTemplateId(preset.id);
     setName(preset.name);
     setPw(preset.pw);
     setPh(preset.ph);
@@ -4124,6 +4717,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
     setUnits(preset.units);
     setShowNew(true);
   };
+  const activeTemplate = getTemplate(templateId);
   const areaLabel =
     units === "imperial" ? `${Math.round(pw * ph)} ft2` : `${pw * ph} m2`;
 
@@ -4409,7 +5003,7 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
               ))}
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {presets.map((preset) => (
+              {presets.filter((preset) => preset.id !== "blank").map((preset) => (
                 <button
                   key={preset.name}
                   className="fps-btn"
@@ -4776,8 +5370,14 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
                         onClick={() => applyPreset(preset)}
                         style={{
                           ...bS,
-                          background: "rgba(255,255,255,.04)",
-                          border: "1px solid rgba(255,255,255,.07)",
+                          background:
+                            templateId === preset.id
+                              ? "rgba(132,94,194,.18)"
+                              : "rgba(255,255,255,.04)",
+                          border:
+                            templateId === preset.id
+                              ? "1px solid rgba(132,94,194,.5)"
+                              : "1px solid rgba(255,255,255,.07)",
                           color: "#E6DFF4",
                           borderRadius: 14,
                           padding: "12px 14px",
@@ -4796,6 +5396,28 @@ function Library({ onOpen, projects, onNew, onDelete, loading, onSupport }) {
                 </div>
 
                 <div style={{ display: "grid", gap: 14 }}>
+                  <div
+                    style={{
+                      background: "rgba(255,255,255,.03)",
+                      border: "1px solid rgba(255,255,255,.06)",
+                      borderRadius: 14,
+                      padding: "12px 14px",
+                    }}
+                  >
+                    <div style={lS}>Template</div>
+                    <div
+                      style={{
+                        fontSize: 15,
+                        color: "#F5F1FD",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {activeTemplate.name}
+                    </div>
+                    <div style={{ fontSize: 12, color: "#9B91B0", lineHeight: 1.7 }}>
+                      {activeTemplate.note}
+                    </div>
+                  </div>
                   <div>
                     <div style={lS}>Project Name</div>
                     <input
@@ -6212,6 +6834,7 @@ export default function FloorPlanStudio({ storage: st }) {
     plotHeight,
     wallThickness,
     units: un,
+    templateId,
   }) => {
     const id = uid(),
       now = new Date().toISOString();
@@ -6219,6 +6842,7 @@ export default function FloorPlanStudio({ storage: st }) {
     const pwM = isImp ? +(plotWidth / M2FT).toFixed(2) : plotWidth;
     const phM = isImp ? +(plotHeight / M2FT).toFixed(2) : plotHeight;
     const wtM = isImp ? wallThickness / CM2IN / 100 : wallThickness || 0.2;
+    const template = getTemplate(templateId);
     const proj = {
       id,
       name,
@@ -6226,18 +6850,11 @@ export default function FloorPlanStudio({ storage: st }) {
       plotHeight: phM,
       wallThickness: wtM,
       units: un || "metric",
+      templateId: template.id,
       createdAt: now,
       updatedAt: now,
-      floors: [
-        {
-          id: uid(),
-          name: "Ground Floor",
-          rooms: [],
-          elements: [],
-          columns: [],
-          height: 3,
-        },
-      ],
+      snapshots: [],
+      floors: buildTemplateFloors(template.id, pwM, phM),
     };
     await SP(st, proj);
     const ix = [
@@ -6249,6 +6866,7 @@ export default function FloorPlanStudio({ storage: st }) {
         plotHeight: phM,
         wallThickness: wtM,
         units: un || "metric",
+        templateId: template.id,
         createdAt: now,
         updatedAt: now,
       },
